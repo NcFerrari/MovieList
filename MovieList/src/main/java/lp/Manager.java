@@ -15,7 +15,6 @@ public class Manager {
 
     public Manager() {
         String path = dialogService.getInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
-
         setInitialDataFromImportFile(path);
         fileTool.loadDataForJSON(TextEnum.DEFAULT_ROOT_PATH.getText());
     }
