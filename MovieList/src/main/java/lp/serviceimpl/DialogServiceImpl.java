@@ -1,6 +1,6 @@
 package lp.serviceimpl;
 
-import javafx.scene.control.TextInputDialog;
+import lp.frontend.Dialogs;
 import lp.service.DialogService;
 
 import java.util.Optional;
@@ -21,10 +21,10 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
-    public Optional<String> getInputDialog(String title, String message) {
-        TextInputDialog textInputDialog = new TextInputDialog();
-        textInputDialog.setTitle(title);
-        textInputDialog.setHeaderText(message);
-        return textInputDialog.showAndWait();
+    public String getInputDialog(String title, String message) {
+        Dialogs.setTitle(title);
+        Dialogs.setMessage(message);
+        javafx.application.Application.launch(Dialogs.class);
+        return Dialogs.getInputResult();
     }
 }

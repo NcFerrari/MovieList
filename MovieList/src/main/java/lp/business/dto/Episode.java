@@ -1,16 +1,16 @@
 package lp.business.dto;
 
-import javafx.scene.control.CheckBox;
-//import lombok.Data;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//@Data
-public class Episode extends CheckBox {
+@Data
+public class Episode {
 
     private String title;
     private boolean directory;
+    private boolean selected;
     private List<Episode> episodes = new ArrayList<>();
 
 }

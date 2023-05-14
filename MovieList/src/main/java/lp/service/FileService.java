@@ -8,4 +8,8 @@ public interface FileService {
     File loadJSON(String path);
 
     Map readJSONFile(File jsonFile);
+
+    File createFile(String text);
+
+    void loadDataForJSON(String path);
 }
