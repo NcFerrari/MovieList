@@ -49,10 +49,12 @@ public class Dialogs extends Application {
             input = textInputDialog.showAndWait();
             if (textInputDialog.getEditor().getText().isEmpty()) {
                 nextProblem = TextEnum.ADDITIONAL_TEXT_EMPTY_STRING.getText();
-            } else if (!new File(input.get()).exists()) {
+            } else if (input.isPresent() && !new File(input.get()).exists()) {
                 nextProblem = TextEnum.ADDITIONAL_TEXT_FILE_NOT_FOUND.getText();
+            } else if (!input.isPresent()) {
+                System.exit(0);
             }
-        } while (!input.isPresent() || textInputDialog.getEditor().getText().isEmpty() || !new File(input.get()).exists());
-        setInputResult(input.get());
+        } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
+        setInputResult(textInputDialog.getEditor().getText());
     }
 }

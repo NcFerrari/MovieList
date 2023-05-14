@@ -58,9 +58,12 @@ public class FileServiceImpl implements FileService {
     @Override
     public void loadDataForJSON(String path) {
         File cDir = new File(path);
+        if (!cDir.exists()) {
+            return;
+        }
         Episode rootDir = new Episode();
         rootDir.setTitle(cDir.getName());
-        rootDir.setDirectory(true);
+        rootDir.setDirectory(cDir.isDirectory());
         for (File category : cDir.listFiles()) {
             if (excludeFiles(category.getName())) {
                 continue;
