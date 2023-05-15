@@ -1,18 +1,12 @@
 package lp.serviceimpl;
 
 import lp.business.dto.Episode;
-import lp.frontend.TextEnum;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FileServiceImpl implements FileService {
 
@@ -26,38 +20,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File loadJSON(String path) {
-        File jsonFile = new File(path);
-        return jsonFile;
-    }
-
-    @Override
-    public Map readJSONFile(File jsonFile) {
-        Map<String, List<Episode>> resultMap = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            mapper.readValue(jsonFile, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return resultMap;
-    }
-
-    @Override
-    public File createFile(String title) {
-        try {
-            File newFile = new File(title);
-            newFile.createNewFile();
-            return newFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void loadDataForJSON(String path) {
-        File cDir = new File(path);
+    public void loadDataForJSON(String pathOfFiles, String pathForJSON) {
+        File cDir = new File(pathOfFiles);
         if (!cDir.exists()) {
             return;
         }
@@ -100,7 +64,7 @@ public class FileServiceImpl implements FileService {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(TextEnum.IMPORT_FILE.getText()).toFile(), rootDir);
+            mapper.writeValue(Paths.get(pathForJSON).toFile(), rootDir);
         } catch (IOException exp) {
             exp.printStackTrace();
         }
