@@ -20,7 +20,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void loadDataForJSON(String pathOfFiles, String pathForJSON) {
+    public void setDataForJSON(String pathOfFiles, String pathForJSON) {
         File cDir = new File(pathOfFiles);
         if (!cDir.exists()) {
             return;

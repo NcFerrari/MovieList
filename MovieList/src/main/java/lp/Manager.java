@@ -17,10 +17,10 @@ public class Manager {
             // get path from TextInputDialog
             String pathOfFiles = dialogService.getInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
             // fill json file
-            fileTool.loadDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
+            fileTool.setDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
         }
 
-        
+
     }
 
     public static void main(String[] args) {

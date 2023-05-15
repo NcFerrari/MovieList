@@ -3,7 +3,7 @@ package lp.frontend;
 public enum TextEnum {
 
     IMPORT_FILE("IMPORT.json"),
-    DEFAULT_ROOT_PATH("E://"),
+    DEFAULT_ROOT_PATH("C://users/lpesek"),
     FILE_NOT_FOUND_TITLE("Chybí soubor"),
     FILE_NOT_FOUND_MESSAGE("Zadejte cestu, k adresáři, od kterého se mají načíst rekurzivně soubory"),
     ADDITIONAL_TEXT_EMPTY_STRING("\n\nPRÁZDNÝ ŘETĚZEC!"),
