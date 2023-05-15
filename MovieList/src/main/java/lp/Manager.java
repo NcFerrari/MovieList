@@ -10,21 +10,21 @@ import lp.serviceimpl.FileServiceImpl;
 
 public class Manager {
 
-    private final FileService fileTool = FileServiceImpl.getInstance();
+    private final FileService fileService = FileServiceImpl.getInstance();
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
     public Manager() {
         // get IMPORT file
-        if (!fileTool.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
+        if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
             // get path from TextInputDialog
-            String pathOfFiles = dialogService.getInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
-            // fill json file
-            fileTool.setDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
+            dialogService.useTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
+//            // fill json file
+//            fileService.setDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
+        } else {
+            Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
+            StartApp.setImportedEpisode(episode);
+            javafx.application.Application.launch(StartApp.class);
         }
-
-        Episode episode = fileTool.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
-        StartApp.setImportedEpisode(episode);
-        javafx.application.Application.launch(StartApp.class);
     }
 
     public static void main(String[] args) {

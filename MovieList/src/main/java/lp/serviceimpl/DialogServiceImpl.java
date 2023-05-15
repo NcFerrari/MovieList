@@ -21,10 +21,9 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
-    public String getInputDialog(String title, String message) {
+    public void useTextInputDialog(String title, String message) {
         Dialogs.setTitle(title);
         Dialogs.setMessage(message);
         javafx.application.Application.launch(Dialogs.class);
-        return Dialogs.getInputResult();
     }
 }
