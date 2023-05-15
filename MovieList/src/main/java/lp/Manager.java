@@ -1,5 +1,7 @@
 package lp;
 
+import lp.business.dto.Episode;
+import lp.frontend.StartApp;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
 import lp.service.FileService;
@@ -20,7 +22,9 @@ public class Manager {
             fileTool.setDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
         }
 
-
+        Episode episode = fileTool.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
+        StartApp.setImportedEpisode(episode);
+        javafx.application.Application.launch(StartApp.class);
     }
 
     public static void main(String[] args) {

@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class FileServiceImpl implements FileService {
 
@@ -73,6 +74,18 @@ public class FileServiceImpl implements FileService {
     @Override
     public File getFile(String text) {
         return new File(text);
+    }
+
+    @Override
+    public <T> T loadJSON(String path, Class<T> returnedClass) {
+        T result = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            result = mapper.readValue(Paths.get(path).toFile(), returnedClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private boolean excludeFiles(String fileName) {
