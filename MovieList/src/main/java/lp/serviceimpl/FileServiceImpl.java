@@ -70,6 +70,11 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public File getFile(String text) {
+        return new File(text);
+    }
+
     private boolean excludeFiles(String fileName) {
         String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO"};
         for (String exFile : excludedFiles) {

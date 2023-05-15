@@ -12,9 +12,15 @@ public class Manager {
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
     public Manager() {
-        //get path from TextInputDialog
-        String pathOfFiles = dialogService.getInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
-        fileTool.loadDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
+        // get IMPORT file
+        if (!fileTool.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
+            // get path from TextInputDialog
+            String pathOfFiles = dialogService.getInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
+            // fill json file
+            fileTool.loadDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
+        }
+
+        
     }
 
     public static void main(String[] args) {
