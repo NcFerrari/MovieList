@@ -22,52 +22,30 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void setDataForJSON(String pathOfFiles, String pathForJSON) {
-        File cDir = new File(pathOfFiles);
-        if (!cDir.exists()) {
+        File rootFile = new File(pathOfFiles);
+        if (!rootFile.exists()) {
             return;
         }
-        Episode rootDir = new Episode();
-        rootDir.setTitle(cDir.getName());
-        rootDir.setDirectory(cDir.isDirectory());
-        for (File category : cDir.listFiles()) {
-            if (excludeFiles(category.getName())) {
-                continue;
-            }
-            Episode categoryEpisode = new Episode();
-            categoryEpisode.setTitle(category.getName());
-            categoryEpisode.setDirectory(category.isDirectory());
-            rootDir.getEpisodes().add(categoryEpisode);
-            if (category.isDirectory() && category.listFiles() != null) {
-                for (File dir : category.listFiles()) {
-                    Episode episode = new Episode();
-                    String name = "";
-                    for (int i = 0; i < dir.getName().split("\\.").length - 1; i++) {
-                        name += dir.getName().split("\\.")[i];
-                    }
-                    episode.setTitle(name);
-                    episode.setDirectory(dir.isDirectory());
-                    categoryEpisode.getEpisodes().add(episode);
-                    if (dir.isDirectory() && dir.listFiles() != null) {
-                        for (File subDir : dir.listFiles()) {
-                            Episode subEpisode = new Episode();
-                            String subName = "";
-                            for (int i = 0; i < subDir.getName().split("\\.").length - 1; i++) {
-                                subName += subDir.getName().split("\\.")[i];
-                            }
-                            subEpisode.setTitle(subName);
-                            subEpisode.setDirectory(subDir.isDirectory());
-                            episode.getEpisodes().add(subEpisode);
-                        }
-                    }
-                }
-            }
-        }
+        Episode episode = new Episode();
+        getData(rootFile, episode);
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(pathForJSON).toFile(), rootDir);
+            mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
         } catch (IOException exp) {
             exp.printStackTrace();
+        }
+    }
+
+    public void getData(File file, Episode episode) {
+        episode.setTitle(file.isDirectory() ? file.getName() : file.getName().substring(0, file.getName().length() - 4));
+        if (!file.isDirectory()) {
+            return;
+        }
+        for (File subFile : file.listFiles()) {
+            Episode subEpisode = new Episode();
+            episode.getEpisodes().add(subEpisode);
+            getData(subFile, subEpisode);
         }
     }
 

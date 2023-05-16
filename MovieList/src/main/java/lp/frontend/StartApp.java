@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -15,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lp.business.dto.Episode;
 
 import java.awt.Dimension;
@@ -39,12 +42,13 @@ public class StartApp extends Application {
     private final Toolkit tool = Toolkit.getDefaultToolkit();
     private final Dimension src = tool.getScreenSize();
     private final List<Button> buttonList = new ArrayList<>();
-    private final Map<String, List<CheckBox>> episodeMap = new HashMap<>();
+    private final Map<String, CategoryInfo> episodeMap = new HashMap<>();
 
     private BorderPane mainPane;
     private FlowPane menuPane;
     private ScrollPane choiceScrollPane;
     private VBox choicePane;
+    private String currentEpisodeTitle;
 
     public void start(Stage stage) {
         mainPane = new BorderPane();
@@ -99,9 +103,20 @@ public class StartApp extends Application {
                         Tooltip checkBoxTooltip = new Tooltip(subEpisode.getTitle());
                         checkBoxTooltip.setFont(new Font("Arial", 16));
                         checkBox.setTooltip(checkBoxTooltip);
+                        if (!subEpisode.getEpisodes().isEmpty()) {
+                            ToggleButton toggleButton = new ToggleButton(">");
+                            toggleButton.setOnAction(action -> {
+                                if (toggleButton.isSelected()) {
+                                    toggleButton.setText("v");
+                                } else {
+                                    toggleButton.setText(">");
+                                }
+                            });
+                            checkBox.setGraphic(toggleButton);
+                        }
                         newCheckBoxList.add(checkBox);
                     });
-                    episodeMap.put(episode.getTitle(), newCheckBoxList);
+                    episodeMap.put(episode.getTitle(), new CategoryInfo(0.0f, newCheckBoxList));
                 }
                 resize();
                 fillChoicePane(episode.getTitle());
@@ -111,14 +126,15 @@ public class StartApp extends Application {
 
     private void fillChoicePane(String title) {
         choicePane.getChildren().clear();
-        List<CheckBox> currentCheckBoxList = null;
+        episodeMap.get(currentEpisodeTitle).setScrollPanePosition(choiceScrollPane.getVvalue());
         if (episodeMap.containsKey(title)) {
-            currentCheckBoxList = episodeMap.get(title);
-            currentCheckBoxList.stream().forEach(checkBox -> {
-                checkBox.setPrefWidth(mainPane.getWidth() / 2 - 20);
-                choicePane.getChildren().add(checkBox);
-            });
+            currentEpisodeTitle = title;
         }
+        episodeMap.get(currentEpisodeTitle).getList().stream().forEach(checkBox -> {
+            checkBox.setPrefWidth(mainPane.getWidth() / 2 - 20);
+            choicePane.getChildren().add(checkBox);
+        });
+
     }
 
     private void resize() {
@@ -151,5 +167,12 @@ public class StartApp extends Application {
 
     private void addStyle(Node node, StyleClasses style) {
         node.getStyleClass().add(style.getClassName());
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class CategoryInfo {
+        private double scrollPanePosition;
+        private List<CheckBox> list;
     }
 }
