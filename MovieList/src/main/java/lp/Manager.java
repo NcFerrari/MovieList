@@ -14,12 +14,8 @@ public class Manager {
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
     public Manager() {
-        // get IMPORT file
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
-            // get path from TextInputDialog
             dialogService.useTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
-//            // fill json file
-//            fileService.setDataForJSON(pathOfFiles, TextEnum.IMPORT_FILE.getText());
         } else {
             Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
             StartApp.setImportedEpisode(episode);

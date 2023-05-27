@@ -20,8 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lp.business.dto.Episode;
 
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -110,7 +108,11 @@ public class StartApp extends Application {
                         item.getCheckBox().setTooltip(checkBoxTooltip);
                         if (!episode.getEpisodes().isEmpty()) {
                             episode.getEpisodes().stream().forEach(subEpisode -> {
-                                item.getCheckBoxes().add(new CheckBox(subEpisode.getTitle()));
+                                CheckBox subCheckBox = new CheckBox(subEpisode.getTitle());
+                                subCheckBox.selectedProperty().addListener(observable -> {
+
+                                });
+                                item.getCheckBoxes().add(subCheckBox);
                             });
                             ToggleButton toggleButton = new ToggleButton(">");
                             toggleButton.setOnAction(action -> {
@@ -119,6 +121,7 @@ public class StartApp extends Application {
                                 } else {
                                     toggleButton.setText(">");
                                 }
+                                fillChoicePane(category.getTitle());
                             });
                             item.getCheckBox().setGraphic(toggleButton);
                         }
@@ -134,15 +137,25 @@ public class StartApp extends Application {
     }
 
     private void fillChoicePane(String title) {
-        choicePane = new VBox();
-        choicePane.setStyle("-fx-background-color: #7e6969");
-        choicePane.setMinWidth(mainPane.getWidth() / 2);
-        choiceScrollPane.setContent(choicePane);
-        episodeMap.get(title).getItems().stream().forEach(item -> {
-            item.getCheckBox().setPrefWidth(mainPane.getWidth() / 2 - 20);
-            choicePane.getChildren().add(item.getCheckBox());
-        });
-        choiceScrollPane.setVvalue(episodeMap.get(title).getScrollPanePosition());
+        if (title != null) {
+            choicePane = new VBox();
+            choicePane.setStyle("-fx-background-color: #7e6969");
+            choicePane.setMinWidth(mainPane.getWidth() / 2);
+            choiceScrollPane.setContent(choicePane);
+            episodeMap.get(title).getItems().stream().forEach(item -> {
+                item.getCheckBox().setPrefWidth(mainPane.getWidth() / 2 - 20);
+                choicePane.getChildren().add(item.getCheckBox());
+                if (item.getCheckBox().getGraphic() != null) {
+                    if (((ToggleButton) item.getCheckBox().getGraphic()).isSelected()) {
+                        item.getCheckBoxes().stream().forEach(subItem -> {
+                            subItem.setPrefWidth(mainPane.getWidth() / 2 - 40);
+                            choicePane.getChildren().add(subItem);
+                        });
+                    }
+                }
+            });
+            choiceScrollPane.setVvalue(episodeMap.get(title).getScrollPanePosition());
+        }
     }
 
     private void resize() {
