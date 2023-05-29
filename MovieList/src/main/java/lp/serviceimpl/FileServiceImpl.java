@@ -1,12 +1,12 @@
 package lp.serviceimpl;
 
-import lp.business.dto.Episode;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FileServiceImpl implements FileService {
@@ -26,26 +26,27 @@ public class FileServiceImpl implements FileService {
         if (!rootFile.exists()) {
             return;
         }
-        Episode episode = new Episode();
-        getData(rootFile, episode);
+        Map<String, Map> episodes = new HashMap<>();
+        getData(rootFile, episodes);
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
+            mapper.writeValue(Paths.get(pathForJSON).toFile(), episodes);
         } catch (IOException exp) {
             exp.printStackTrace();
         }
     }
 
-    public void getData(File file, Episode episode) {
-        episode.setTitle(file.isDirectory() ? file.getName() : file.getName().substring(0, file.getName().length() - 4));
-        if (!file.isDirectory()) {
+    public void getData(File file, Map<String, Map> episodes) {
+        if (excludeFiles(file.getName())) {
+            return;
+        }
+        episodes.put(file.getName(), new HashMap());
+        if (!file.isDirectory() || file.listFiles().length == 0) {
             return;
         }
         for (File subFile : file.listFiles()) {
-            Episode subEpisode = new Episode();
-            episode.getEpisodes().add(subEpisode);
-            getData(subFile, subEpisode);
+            getData(subFile, episodes.get(file.getName()));
         }
     }
 
@@ -67,9 +68,9 @@ public class FileServiceImpl implements FileService {
     }
 
     private boolean excludeFiles(String fileName) {
-        String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO"};
+        String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO", ".jpg"};
         for (String exFile : excludedFiles) {
-            if (exFile.equals(fileName)) {
+            if (fileName.endsWith(exFile)) {
                 return true;
             }
         }

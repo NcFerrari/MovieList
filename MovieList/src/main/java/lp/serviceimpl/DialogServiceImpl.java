@@ -3,8 +3,6 @@ package lp.serviceimpl;
 import lp.frontend.Dialogs;
 import lp.service.DialogService;
 
-import java.util.Optional;
-
 public class DialogServiceImpl implements DialogService {
 
     private static DialogServiceImpl dialogService;

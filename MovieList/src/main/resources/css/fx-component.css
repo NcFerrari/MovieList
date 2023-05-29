@@ -9,7 +9,9 @@
 
 .menu-button {
     -fx-background-color: #81abff;
-    -fx-padding: 10;
+    -fx-padding: 10px;
+    -fx-border-insets: 10px;
+    -fx-background-insets: 10px;
     -fx-min-width: 200px;
     -fx-border-color: orange;
     -fx-border-width: 0 0 3px 0;
