@@ -52,8 +52,8 @@ public class Dialogs extends Application {
             }
         } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
         fileService.setDataForJSON(textInputDialog.getEditor().getText(), TextEnum.IMPORT_FILE.getText());
-        Map<String, Map> episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Map.class);
-//        StartApp.setImportedEpisode(episode);
-//        StartApp.class.newInstance().start(new Stage());
+        Map<String, Map<String, Map>> episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Map.class);
+        StartApp.setImportedEpisode(episode);
+        StartApp.class.newInstance().start(new Stage());
     }
 }

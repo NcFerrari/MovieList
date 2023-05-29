@@ -9,7 +9,9 @@ public enum TextEnum {
     ADDITIONAL_TEXT_EMPTY_STRING("\n\nPRÁZDNÝ ŘETĚZEC!"),
     ADDITIONAL_TEXT_FILE_NOT_FOUND("\n\nADRESÁŘ NEEXISTUJE!"),
     APPLICATION_TITLE("Seznam filmů"),
-    RESOURCES("/css/fx-component.css");
+    RESOURCES("/css/fx-component.css"),
+    OPENED_SUB_LIST("v"),
+    CLOSED_SUB_LIST(">");
 
     private String text;
 

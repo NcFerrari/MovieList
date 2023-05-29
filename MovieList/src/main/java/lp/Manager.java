@@ -18,7 +18,7 @@ public class Manager {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
             dialogService.useTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
         } else {
-            Map<String, Map> episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Map.class);
+            Map<String, Map<String, Map>> episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Map.class);
             StartApp.setImportedEpisode(episode);
             javafx.application.Application.launch(StartApp.class);
         }
