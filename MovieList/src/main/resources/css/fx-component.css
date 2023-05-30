@@ -4,6 +4,7 @@
 
 .menu {
     -fx-background-color: yellow;
+    -fx-border-color: purple;
     -fx-background-radius: 15;
 }
 

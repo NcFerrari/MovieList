@@ -11,7 +11,12 @@ public enum TextEnum {
     APPLICATION_TITLE("Seznam filmů"),
     RESOURCES("/css/fx-component.css"),
     OPENED_SUB_LIST("v"),
-    CLOSED_SUB_LIST(">");
+    CLOSED_SUB_LIST(">"),
+    CLEAR_SELECTED_BUTTON_TEXT("Reset vybranných položek"),
+    EXPORT_ITEMS("Vygenerovat soubor vybranných položek"),
+    COPY_FILES("Zkopíruj vybrané položky"),
+    RESET_SELECTED_TITLE("Resetovat vybrané?"),
+    RESET_SELECTED_QUESTION("Opravdu si přeješ resetovat celý výběr?");
 
     private String text;
 

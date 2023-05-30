@@ -2,6 +2,7 @@ package lp.frontend;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,6 +18,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.Data;
 import lp.business.dto.Episode;
+import lp.service.DialogService;
+import lp.serviceimpl.DialogServiceImpl;
 
 import java.awt.Toolkit;
 import java.util.LinkedHashMap;
@@ -24,6 +27,7 @@ import java.util.Map;
 
 public class StartApp extends Application {
 
+    private final DialogService dialogService = DialogServiceImpl.getInstance();
     private static Episode importedEpisode;
 
     public static Episode getImportedEpisode() {
@@ -40,6 +44,8 @@ public class StartApp extends Application {
     private FlowPane menuPane;
     private ScrollPane episodeScrollPane;
     private VBox episodePane;
+    private FlowPane footerPane;
+
     private Button selectedButton;
 
     public void start(Stage stage) {
@@ -50,11 +56,13 @@ public class StartApp extends Application {
         scene.getStylesheets().add(getClass().getResource(TextEnum.RESOURCES.getText()).toExternalForm());
         stage.setTitle(TextEnum.APPLICATION_TITLE.getText());
         stage.show();
+        menuPane = new FlowPane();
+        addStyle(menuPane, StyleClasses.MENU);
+        mainPane.setTop(menuPane);
         setMenu();
         setEpisodePane();
         setStageListeners(stage);
-
-//        stage.setMaximized(true);
+        setFooter();
         resize();
     }
 
@@ -63,12 +71,9 @@ public class StartApp extends Application {
     }
 
     private void setMenu() {
-        if (getImportedEpisode().getEpisodes().isEmpty()) {
+        if (getImportedEpisode() == null || getImportedEpisode().getEpisodes().isEmpty()) {
             return;
         }
-        menuPane = new FlowPane();
-        addStyle(menuPane, StyleClasses.MENU);
-        mainPane.setTop(menuPane);
         getImportedEpisode().getEpisodes().forEach((categoryTitle, categories) -> {
             Button menuButton = new Button(categoryTitle);
             addStyle(menuButton, StyleClasses.MENU_BUTTON);
@@ -112,8 +117,10 @@ public class StartApp extends Application {
     }
 
     private void resize() {
-        episodePane.setPrefSize(mainPane.getWidth() / 2, mainPane.getHeight() - menuPane.getHeight());
-        episodePane.getChildren().stream().forEach(item -> ((CheckBox) item).setPrefWidth(mainPane.getWidth() / 2 - 20));
+        if (episodePane != null) {
+            episodePane.setPrefSize(mainPane.getWidth() / 2, mainPane.getHeight() - menuPane.getHeight() - footerPane.getHeight());
+            episodePane.getChildren().stream().forEach(item -> ((CheckBox) item).setPrefWidth(mainPane.getWidth() / 2 - 20));
+        }
     }
 
     private void fillEpisodePane() {
@@ -158,6 +165,25 @@ public class StartApp extends Application {
         if (!item.getItems().isEmpty() && ((ToggleButton) item.getCheckBox().getGraphic()).isSelected()) {
             item.getItems().forEach((k, v) -> addToEpisodePane(episodePane, v));
         }
+    }
+
+    private void setFooter() {
+        footerPane = new FlowPane();
+        footerPane.setAlignment(Pos.CENTER);
+        addStyle(footerPane, StyleClasses.MENU);
+        mainPane.setBottom(footerPane);
+
+        Button clearButton = new Button(TextEnum.CLEAR_SELECTED_BUTTON_TEXT.getText());
+        clearButton.setOnAction(evt -> {
+
+        });
+        Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
+        Button copyButton = new Button(TextEnum.COPY_FILES.getText());
+        copyButton.setDisable(true);
+        footerPane.getChildren().addAll(clearButton, exportButton, copyButton);
+        footerPane.getChildren().forEach(node -> {
+            addStyle(node, StyleClasses.MENU_BUTTON);
+        });
     }
 
     @Data
