@@ -34,7 +34,7 @@ public class Dialogs extends Application {
     private final FileService fileService = FileServiceImpl.getInstance();
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         TextInputDialog textInputDialog = new TextInputDialog();
         textInputDialog.setTitle(getTitle());
         textInputDialog.getEditor().setText(TextEnum.DEFAULT_ROOT_PATH.getText());
@@ -52,8 +52,8 @@ public class Dialogs extends Application {
             }
         } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
         fileService.setDataForJSON(textInputDialog.getEditor().getText(), TextEnum.IMPORT_FILE.getText());
-//        Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
-//        StartApp.setImportedEpisode(episode);
-//        StartApp.class.newInstance().start(new Stage());
+        Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
+        StartApp.setImportedEpisode(episode);
+        StartApp.class.newInstance().start(new Stage());
     }
 }

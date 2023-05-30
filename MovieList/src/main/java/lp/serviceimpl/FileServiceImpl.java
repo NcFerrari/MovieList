@@ -38,11 +38,11 @@ public class FileServiceImpl implements FileService {
     }
 
     public void fillEpisode(File file, Episode episode) {
-        if (excludeFiles(file.getName())) {
-            return;
-        }
         if (file.isDirectory()) {
             for (File subFile : file.listFiles()) {
+                if (excludeFiles(subFile.getName())) {
+                    continue;
+                }
                 String subFileName = subFile.isDirectory() ? subFile.getName() : subFile.getName().substring(0, subFile.getName().length() - 4);
                 Episode subEpisode = new Episode(subFileName);
                 if (subFile.isDirectory()) {

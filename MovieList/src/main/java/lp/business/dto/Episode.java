@@ -1,11 +1,13 @@
 package lp.business.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class Episode {
 
     private String title;

@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.Data;
+import lp.business.dto.Episode;
 
 import java.awt.Toolkit;
 import java.util.LinkedHashMap;
@@ -23,13 +24,13 @@ import java.util.Map;
 
 public class StartApp extends Application {
 
-    private static Map<String, Map<String, Map>> importedEpisode;
+    private static Episode importedEpisode;
 
-    public static Map<String, Map<String, Map>> getImportedEpisode() {
+    public static Episode getImportedEpisode() {
         return importedEpisode;
     }
 
-    public static void setImportedEpisode(Map<String, Map<String, Map>> importedEpisode) {
+    public static void setImportedEpisode(Episode importedEpisode) {
         StartApp.importedEpisode = importedEpisode;
     }
 
@@ -40,7 +41,6 @@ public class StartApp extends Application {
     private ScrollPane episodeScrollPane;
     private VBox episodePane;
     private Button selectedButton;
-//    private CategoryInfo currentCategorySelected;
 
     public void start(Stage stage) {
         mainPane = new BorderPane();
@@ -63,13 +63,13 @@ public class StartApp extends Application {
     }
 
     private void setMenu() {
-        if (getImportedEpisode().isEmpty()) {
+        if (getImportedEpisode().getEpisodes().isEmpty()) {
             return;
         }
         menuPane = new FlowPane();
         addStyle(menuPane, StyleClasses.MENU);
         mainPane.setTop(menuPane);
-        getImportedEpisode().forEach((rootFile, categories) -> categories.keySet().stream().forEach(categoryTitle -> {
+        getImportedEpisode().getEpisodes().forEach((categoryTitle, categories) -> {
             Button menuButton = new Button(categoryTitle);
             addStyle(menuButton, StyleClasses.MENU_BUTTON);
             menuPane.getChildren().add(menuButton);
@@ -77,7 +77,7 @@ public class StartApp extends Application {
                 changeSelectedButton(menuButton);
                 fillEpisodePane();
             });
-        }));
+        });
     }
 
     private void changeSelectedButton(Button clickedButton) {
@@ -116,6 +116,50 @@ public class StartApp extends Application {
         episodePane.getChildren().stream().forEach(item -> ((CheckBox) item).setPrefWidth(mainPane.getWidth() / 2 - 20));
     }
 
+    private void fillEpisodePane() {
+        if (selectedButton == null) {
+            return;
+        }
+        checkIfMapIsFilledWithSelectedButton();
+        episodePane = new VBox();
+        episodePane.setStyle("-fx-background-color: #7e6969");
+        episodePane.setMinWidth(mainPane.getWidth() / 2);
+        episodeScrollPane.setContent(episodePane);
+
+        loadedItemList.get(selectedButton.getText()).items.forEach((k, v) -> {
+            addToEpisodePane(episodePane, v);
+        });
+        resize();
+        episodeScrollPane.setVvalue(loadedItemList.get(selectedButton.getText()).getScrollPanePosition());
+    }
+
+    private void checkIfMapIsFilledWithSelectedButton() {
+        if (loadedItemList.containsKey(selectedButton.getText())) {
+            return;
+        }
+        Item item = new Item(selectedButton.getText());
+        item = fillItem(item, getImportedEpisode().getEpisodes().get(selectedButton.getText()));
+        loadedItemList.put(selectedButton.getText(), item);
+    }
+
+    private Item fillItem(Item item, Episode episode) {
+        episode.getEpisodes().forEach((key, value) -> {
+            item.getItems().put(key.toString(), new Item(key.toString()));
+            if (!episode.getEpisodes().get(key).getEpisodes().isEmpty()) {
+                item.getItems().get(key.toString()).addToggleButton();
+                fillItem(item.getItems().get(key.toString()), episode.getEpisodes().get(key));
+            }
+        });
+        return item;
+    }
+
+    private void addToEpisodePane(VBox episodePane, Item item) {
+        episodePane.getChildren().add(item.getCheckBox());
+        if (!item.getItems().isEmpty() && ((ToggleButton) item.getCheckBox().getGraphic()).isSelected()) {
+            item.getItems().forEach((k, v) -> addToEpisodePane(episodePane, v));
+        }
+    }
+
     @Data
     private class Item {
         private CheckBox checkBox;
@@ -142,51 +186,5 @@ public class StartApp extends Application {
             });
             checkBox.setGraphic(toggleButton);
         }
-    }
-
-    private void fillEpisodePane() {
-        if (selectedButton == null) {
-            return;
-        }
-        checkIfMapIsFilledWithSelectedButton();
-        episodePane = new VBox();
-        episodePane.setStyle("-fx-background-color: #7e6969");
-        episodePane.setMinWidth(mainPane.getWidth() / 2);
-        episodeScrollPane.setContent(episodePane);
-
-        loadedItemList.get(selectedButton.getText()).items.forEach((k, v) -> {
-            addToEpisodePane(episodePane, v);
-        });
-        resize();
-        episodeScrollPane.setVvalue(loadedItemList.get(selectedButton.getText()).getScrollPanePosition());
-    }
-
-    private void addToEpisodePane(VBox episodePane, Item item) {
-        episodePane.getChildren().add(item.getCheckBox());
-        if (!item.getItems().isEmpty() && ((ToggleButton) item.getCheckBox().getGraphic()).isSelected()) {
-            item.getItems().forEach((k, v) -> addToEpisodePane(episodePane, v));
-        }
-    }
-
-    private void checkIfMapIsFilledWithSelectedButton() {
-        if (loadedItemList.containsKey(selectedButton.getText())) {
-            return;
-        }
-        getImportedEpisode().forEach((rootFile, categories) -> {
-            Item item = new Item(selectedButton.getText());
-            item = fillItem(item, categories.get(selectedButton.getText()));
-            loadedItemList.put(selectedButton.getText(), item);
-        });
-    }
-
-    private Item fillItem(Item item, Map<String, Map<String, Map>> map) {
-        map.forEach((key, value) -> {
-            item.getItems().put(key.toString(), new Item(key.toString()));
-            if (!map.get(key).isEmpty()) {
-                item.getItems().get(key.toString()).addToggleButton();
-                fillItem(item.getItems().get(key.toString()), (Map) map.get(key));
-            }
-        });
-        return item;
     }
 }

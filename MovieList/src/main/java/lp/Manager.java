@@ -1,6 +1,7 @@
 package lp;
 
 import lp.business.dto.Episode;
+import lp.frontend.StartApp;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
 import lp.service.FileService;
@@ -17,8 +18,8 @@ public class Manager {
             dialogService.useTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
         } else {
             Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
-//            StartApp.setImportedEpisode(episode);
-//            javafx.application.Application.launch(StartApp.class);
+            StartApp.setImportedEpisode(episode);
+            javafx.application.Application.launch(StartApp.class);
         }
     }
 
