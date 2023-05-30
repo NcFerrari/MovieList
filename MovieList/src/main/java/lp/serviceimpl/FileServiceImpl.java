@@ -1,5 +1,6 @@
 package lp.serviceimpl;
 
+import lp.business.dto.Episode;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -7,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class FileServiceImpl implements FileService {
 
@@ -26,27 +26,30 @@ public class FileServiceImpl implements FileService {
         if (!rootFile.exists()) {
             return;
         }
-        Map<String, Map> episodes = new LinkedHashMap<>();
-        getData(rootFile, episodes);
+        Episode episode = new Episode(rootFile.getName());
+        fillEpisode(rootFile, episode);
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(pathForJSON).toFile(), episodes);
+            mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
         } catch (IOException exp) {
             exp.printStackTrace();
         }
     }
 
-    public void getData(File file, Map<String, Map> episodes) {
+    public void fillEpisode(File file, Episode episode) {
         if (excludeFiles(file.getName())) {
             return;
         }
-        episodes.put(file.isDirectory() ? file.getName() : file.getName().substring(0, file.getName().length() - 4), new LinkedHashMap());
-        if (!file.isDirectory() || file.listFiles().length == 0) {
-            return;
-        }
-        for (File subFile : file.listFiles()) {
-            getData(subFile, episodes.get(file.getName()));
+        if (file.isDirectory()) {
+            for (File subFile : file.listFiles()) {
+                String subFileName = subFile.isDirectory() ? subFile.getName() : subFile.getName().substring(0, subFile.getName().length() - 4);
+                Episode subEpisode = new Episode(subFileName);
+                if (subFile.isDirectory()) {
+                    fillEpisode(subFile, subEpisode);
+                }
+                episode.getEpisodes().put(subFileName, subEpisode);
+            }
         }
     }
 
