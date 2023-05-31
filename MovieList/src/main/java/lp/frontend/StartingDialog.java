@@ -10,28 +10,28 @@ import lp.serviceimpl.FileServiceImpl;
 import java.io.File;
 import java.util.Optional;
 
-public class Dialogs extends Application {
+public class StartingDialog extends Application {
 
     private static String title;
     private static String message;
 
-    public static void setTitle(String title) {
-        Dialogs.title = title;
-    }
+    private final FileService fileService = FileServiceImpl.getInstance();
 
     public static String getTitle() {
         return title;
     }
 
-    public static void setMessage(String message) {
-        Dialogs.message = message;
+    public static void setTitle(String title) {
+        StartingDialog.title = title;
     }
 
     public static String getMessage() {
         return message;
     }
 
-    private final FileService fileService = FileServiceImpl.getInstance();
+    public static void setMessage(String message) {
+        StartingDialog.message = message;
+    }
 
     @Override
     public void start(Stage stage) {

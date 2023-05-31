@@ -1,7 +1,5 @@
 package lp;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import lp.business.dto.Episode;
 import lp.frontend.StartApp;
 import lp.frontend.TextEnum;
@@ -17,7 +15,7 @@ public class Manager {
 
     public Manager() {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
-            dialogService.useTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
+            dialogService.initTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
         } else {
             Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
             StartApp.setImportedEpisode(episode);

@@ -2,7 +2,7 @@ package lp.serviceimpl;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import lp.frontend.Dialogs;
+import lp.frontend.StartingDialog;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
 
@@ -12,6 +12,7 @@ public class DialogServiceImpl implements DialogService {
 
     private static DialogServiceImpl dialogService;
     private Alert dialog;
+
 
     private DialogServiceImpl() {
 
@@ -25,10 +26,10 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
-    public void useTextInputDialog(String title, String message) {
-        Dialogs.setTitle(title);
-        Dialogs.setMessage(message);
-        javafx.application.Application.launch(Dialogs.class);
+    public void initTextInputDialog(String title, String message) {
+        StartingDialog.setTitle(title);
+        StartingDialog.setMessage(message);
+        javafx.application.Application.launch(StartingDialog.class);
     }
 
     @Override
