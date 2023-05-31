@@ -7,7 +7,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
 
 public class FileServiceImpl implements FileService {
 
@@ -21,7 +20,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void setDataForJSON(String pathOfFiles, String pathForJSON) {
+    public void writeDataToJSON(String pathOfFiles, String pathForJSON) {
         File rootFile = new File(pathOfFiles);
         if (!rootFile.exists()) {
             return;
@@ -34,22 +33,6 @@ public class FileServiceImpl implements FileService {
             mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
         } catch (IOException exp) {
             exp.printStackTrace();
-        }
-    }
-
-    public void fillEpisode(File file, Episode episode) {
-        if (file.isDirectory()) {
-            for (File subFile : file.listFiles()) {
-                if (excludeFiles(subFile.getName())) {
-                    continue;
-                }
-                String subFileName = subFile.isDirectory() ? subFile.getName() : subFile.getName().substring(0, subFile.getName().length() - 4);
-                Episode subEpisode = new Episode(subFileName);
-                if (subFile.isDirectory()) {
-                    fillEpisode(subFile, subEpisode);
-                }
-                episode.getEpisodes().put(subFileName, subEpisode);
-            }
         }
     }
 
@@ -68,6 +51,22 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    private void fillEpisode(File file, Episode episode) {
+        if (file.isDirectory()) {
+            for (File subFile : file.listFiles()) {
+                if (excludeFiles(subFile.getName())) {
+                    continue;
+                }
+                String subFileName = subFile.isDirectory() ? subFile.getName() : subFile.getName().substring(0, subFile.getName().length() - 4);
+                Episode subEpisode = new Episode(subFileName);
+                if (subFile.isDirectory()) {
+                    fillEpisode(subFile, subEpisode);
+                }
+                episode.getEpisodes().put(subFileName, subEpisode);
+            }
+        }
     }
 
     private boolean excludeFiles(String fileName) {

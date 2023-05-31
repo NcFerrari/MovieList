@@ -5,11 +5,8 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -20,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.Data;
+import lp.Manager;
 import lp.business.dto.Episode;
 import lp.service.DialogService;
 import lp.serviceimpl.DialogServiceImpl;
@@ -27,20 +25,11 @@ import lp.serviceimpl.DialogServiceImpl;
 import java.awt.Toolkit;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class StartApp extends Application {
 
     private final DialogService dialogService = DialogServiceImpl.getInstance();
-    private static Episode importedEpisode;
-
-    public static Episode getImportedEpisode() {
-        return importedEpisode;
-    }
-
-    public static void setImportedEpisode(Episode importedEpisode) {
-        StartApp.importedEpisode = importedEpisode;
-    }
+    private Manager manager;
 
     private final Map<String, Item> loadedItemList = new LinkedHashMap<>();
 
@@ -53,6 +42,7 @@ public class StartApp extends Application {
     private Button selectedButton;
 
     public void start(Stage stage) {
+        manager = Manager.getInstance();
         mainPane = new BorderPane();
         addStyle(mainPane, StyleClasses.PANE);
         Scene scene = new Scene(mainPane, Toolkit.getDefaultToolkit().getScreenSize().width / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
@@ -75,10 +65,10 @@ public class StartApp extends Application {
     }
 
     private void setMenu() {
-        if (getImportedEpisode() == null || getImportedEpisode().getEpisodes().isEmpty()) {
+        if (manager.getImportedEpisode() == null || manager.getImportedEpisode().getEpisodes().isEmpty()) {
             return;
         }
-        getImportedEpisode().getEpisodes().forEach((categoryTitle, categories) -> {
+        manager.getImportedEpisode().getEpisodes().forEach((categoryTitle, categories) -> {
             Button menuButton = new Button(categoryTitle);
             addStyle(menuButton, StyleClasses.MENU_BUTTON);
             menuPane.getChildren().add(menuButton);
@@ -149,7 +139,7 @@ public class StartApp extends Application {
             return;
         }
         Item item = new Item(selectedButton.getText());
-        item = fillItem(item, getImportedEpisode().getEpisodes().get(selectedButton.getText()));
+        item = fillItem(item, manager.getImportedEpisode().getEpisodes().get(selectedButton.getText()));
         loadedItemList.put(selectedButton.getText(), item);
     }
 

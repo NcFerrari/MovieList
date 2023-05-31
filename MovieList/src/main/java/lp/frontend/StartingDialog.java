@@ -3,6 +3,7 @@ package lp.frontend;
 import javafx.application.Application;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
+import lp.Manager;
 import lp.business.dto.Episode;
 import lp.service.FileService;
 import lp.serviceimpl.FileServiceImpl;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 public class StartingDialog extends Application {
 
+    private Manager manager = Manager.getInstance();
     private static String title;
     private static String message;
 
@@ -51,9 +53,8 @@ public class StartingDialog extends Application {
                 System.exit(0);
             }
         } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
-        fileService.setDataForJSON(textInputDialog.getEditor().getText(), TextEnum.IMPORT_FILE.getText());
-        Episode episode = fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class);
-        StartApp.setImportedEpisode(episode);
+        fileService.writeDataToJSON(textInputDialog.getEditor().getText(), TextEnum.IMPORT_FILE.getText());
+        manager.setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
         try {
             StartApp.class.newInstance().start(new Stage());
         } catch (Exception exp) {
