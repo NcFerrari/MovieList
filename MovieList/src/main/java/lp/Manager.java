@@ -1,5 +1,7 @@
 package lp;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import lp.business.dto.Episode;
 import lp.frontend.StartApp;
 import lp.frontend.TextEnum;

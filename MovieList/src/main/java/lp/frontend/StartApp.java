@@ -5,8 +5,11 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -24,6 +27,7 @@ import lp.serviceimpl.DialogServiceImpl;
 import java.awt.Toolkit;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class StartApp extends Application {
 
@@ -175,7 +179,10 @@ public class StartApp extends Application {
 
         Button clearButton = new Button(TextEnum.CLEAR_SELECTED_BUTTON_TEXT.getText());
         clearButton.setOnAction(evt -> {
+            String answer = dialogService.useConfirmDialog(TextEnum.RESET_SELECTED_TITLE.getText(), TextEnum.RESET_SELECTED_QUESTION.getText()).get().getText();
+            if (answer.equals(TextEnum.YES.getText())) {
 
+            }
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
         Button copyButton = new Button(TextEnum.COPY_FILES.getText());

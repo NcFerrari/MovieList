@@ -15,8 +15,10 @@ public enum TextEnum {
     CLEAR_SELECTED_BUTTON_TEXT("Reset vybranných položek"),
     EXPORT_ITEMS("Vygenerovat soubor vybranných položek"),
     COPY_FILES("Zkopíruj vybrané položky"),
-    RESET_SELECTED_TITLE("Resetovat vybrané?"),
-    RESET_SELECTED_QUESTION("Opravdu si přeješ resetovat celý výběr?");
+    RESET_SELECTED_TITLE("Resetovat vybrané položky?"),
+    RESET_SELECTED_QUESTION("Opravdu si přeješ resetovat celý výběr?"),
+    YES("Ano"),
+    NO("Ne");
 
     private String text;
 
