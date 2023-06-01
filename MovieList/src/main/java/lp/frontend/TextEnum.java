@@ -5,8 +5,8 @@ public enum TextEnum {
     IMPORT_FILE("IMPORT.json"),
     EXPORT_FILE("EXPORTED.json"),
     DEFAULT_ROOT_PATH("C://Users/lpesek/Desktop/Test"),
-    FILE_NOT_FOUND_TITLE("Chybí soubor"),
-    FILE_NOT_FOUND_MESSAGE("Zadejte cestu, k adresáři, od kterého se mají načíst rekurzivně soubory"),
+    FILE_PATH_TITLE("Zadejte soubor"),
+    FILE_PATH_MESSAGE("Zadejte cestu, k adresáři, od kterého se mají načíst rekurzivně soubory"),
     ADDITIONAL_TEXT_EMPTY_STRING("\n\nPRÁZDNÝ ŘETĚZEC!"),
     ADDITIONAL_TEXT_FILE_NOT_FOUND("\n\nADRESÁŘ NEEXISTUJE!"),
     APPLICATION_TITLE("Seznam filmů"),
@@ -23,7 +23,10 @@ public enum TextEnum {
     OK_TEXT("Ok"),
     SUCCESS_EXPORT("HOTOVO!\nGenerování souboru " + EXPORT_FILE.getText() + " se podařilo."),
     ERROR_TITLE("Chybová hláška"),
-    ERROR_MESSAGE("No ty koki! Něco se posralo a je třeba to řešit. Následující chybu zkopíruj a pošli Lubovi\n\n");
+    ERROR_MESSAGE("No ty koki! Něco se posralo a je třeba to řešit. Následující chybu zkopíruj a pošli Lubovi\n\n"),
+    INTRODUCE_DIALOG_TITLE("Nutný soubor"),
+    INTRODUCE_DIALOG_TEXT("Je potřeba soubor " + IMPORT_FILE.getText()),
+    INTRODUCE_DIALOG_PASSWORD("SETFILE");
 
     private String text;
 

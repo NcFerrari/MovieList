@@ -35,7 +35,7 @@ public class Manager {
 
     public void startApplication() {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
-            dialogService.initTextInputDialog(TextEnum.FILE_NOT_FOUND_TITLE.getText(), TextEnum.FILE_NOT_FOUND_MESSAGE.getText());
+            dialogService.initTextInputDialog(TextEnum.FILE_PATH_TITLE.getText(), TextEnum.FILE_PATH_MESSAGE.getText());
         } else {
             setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
             javafx.application.Application.launch(StartApp.class);

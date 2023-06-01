@@ -1,7 +1,10 @@
 package lp.frontend;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lp.Manager;
 import lp.business.dto.Episode;
@@ -41,29 +44,40 @@ public class StartingDialog extends Application {
 
     @Override
     public void start(Stage stage) {
-        TextInputDialog textInputDialog = new TextInputDialog();
-        textInputDialog.setTitle(getTitle());
-        textInputDialog.getEditor().setText(TextEnum.DEFAULT_ROOT_PATH.getText());
-        Optional<String> input;
-        String nextProblem = "";
-        do {
-            textInputDialog.setHeaderText(getMessage() + nextProblem);
-            input = textInputDialog.showAndWait();
-            if (textInputDialog.getEditor().getText().isEmpty()) {
-                nextProblem = TextEnum.ADDITIONAL_TEXT_EMPTY_STRING.getText();
-            } else if (input.isPresent() && !new File(input.get()).exists()) {
-                nextProblem = TextEnum.ADDITIONAL_TEXT_FILE_NOT_FOUND.getText();
-            } else if (!input.isPresent()) {
-                System.exit(0);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(TextEnum.INTRODUCE_DIALOG_TITLE.getText());
+        alert.setHeaderText(TextEnum.INTRODUCE_DIALOG_TEXT.getText());
+        alert.show();
+        final String[] code = {new String(), TextEnum.INTRODUCE_DIALOG_PASSWORD.getText()};
+        alert.getDialogPane().setOnKeyPressed(evt -> {
+            code[0] += evt.getCode().toString();
+            if (code[0].contains(code[1])) {
+                alert.close();
+                TextInputDialog textInputDialog = new TextInputDialog();
+                textInputDialog.setTitle(getTitle());
+                textInputDialog.getEditor().setText(TextEnum.DEFAULT_ROOT_PATH.getText());
+                Optional<String> input;
+                String nextProblem = new String();
+                do {
+                    textInputDialog.setHeaderText(getMessage() + nextProblem);
+                    input = textInputDialog.showAndWait();
+                    if (textInputDialog.getEditor().getText().isEmpty()) {
+                        nextProblem = TextEnum.ADDITIONAL_TEXT_EMPTY_STRING.getText();
+                    } else if (input.isPresent() && !new File(input.get()).exists()) {
+                        nextProblem = TextEnum.ADDITIONAL_TEXT_FILE_NOT_FOUND.getText();
+                    } else if (!input.isPresent()) {
+                        System.exit(0);
+                    }
+                } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
+                Episode episode = fileService.getEpisodeObjectFromFileSystem(textInputDialog.getEditor().getText());
+                fileService.writeDataToJSON(TextEnum.IMPORT_FILE.getText(), episode);
+                manager.setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
+                try {
+                    StartApp.class.newInstance().start(new Stage());
+                } catch (Exception exp) {
+                    dialogService.useErrorDialog(exp);
+                }
             }
-        } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
-        Episode episode = fileService.getEpisodeObjectFromFileSystem(textInputDialog.getEditor().getText());
-        fileService.writeDataToJSON(TextEnum.IMPORT_FILE.getText(), episode);
-        manager.setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
-        try {
-            StartApp.class.newInstance().start(new Stage());
-        } catch (Exception exp) {
-            dialogService.useErrorDialog(exp);
-        }
+        });
     }
 }
