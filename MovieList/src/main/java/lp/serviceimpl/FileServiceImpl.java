@@ -1,9 +1,12 @@
 package lp.serviceimpl;
 
 import lp.business.dto.Episode;
+import lp.frontend.EpisodeCheckBox;
+import lp.frontend.TextEnum;
 import lp.service.DialogService;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +42,7 @@ public class FileServiceImpl implements FileService {
         if (!rootFile.exists()) {
             return null;
         }
-        Episode episode = new Episode(rootFile.getName());
+        Episode episode = new Episode(rootFile.getAbsolutePath());
         fillEpisode(rootFile, episode);
         return episode;
     }
@@ -59,6 +62,18 @@ public class FileServiceImpl implements FileService {
             dialogService.useErrorDialog(exp);
         }
         return result;
+    }
+
+    @Override
+    public void copyFilesTo(String path, Episode episode) {
+        File newFilesDir = new File(path);
+        if (!newFilesDir.exists()) {
+            if (TextEnum.NO_TEXT.getText().equals(dialogService.useConfirmDialog(TextEnum.DIR_NOT_EXISTS_TITLE.getText(), TextEnum.DIR_NOT_EXISTS_MESSAGE.getText()))) {
+                return;
+            }
+            newFilesDir.mkdir();
+        }
+
     }
 
     private void fillEpisode(File file, Episode episode) {

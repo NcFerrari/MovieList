@@ -31,6 +31,7 @@ public class MainAPP extends Application {
     private ScrollPane episodeScrollPane;
     private VBox episodePane;
     private FlowPane footerPane;
+    private Button copyButton;
 
     public void start(Stage stage) {
         mainPane = new BorderPane();
@@ -88,7 +89,20 @@ public class MainAPP extends Application {
     private void setStageListeners(Stage stage) {
         stage.widthProperty().addListener((obs, oldVal, newVal) -> resize());
         stage.heightProperty().addListener((obs, oldVal, newVal) -> resize());
-        stage.maximizedProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(() -> resize()));
+        stage.maximizedProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::resize));
+        String[] sceneKeyEvents = new String[]{new String(), TextEnum.SUPER_SECRET_PASSWORD.getText()};
+        stage.getScene().setOnKeyPressed(evt -> {
+            sceneKeyEvents[0] += evt.getCode();
+            if (sceneKeyEvents[0].contains(sceneKeyEvents[1])) {
+                copyButton.setDisable(!copyButton.isDisabled());
+                sceneKeyEvents[0] = "";
+            } else if (sceneKeyEvents[0].contains("MAGDA")) {
+                copyButton.setText("To víš že jo:) ,,I,,");
+            }
+            if (sceneKeyEvents[0].length() > 100) {
+                sceneKeyEvents[0] = "";
+            }
+        });
     }
 
     private void resize() {
@@ -122,7 +136,7 @@ public class MainAPP extends Application {
 
     private void addToEpisodePane(VBox episodePane, EpisodeCheckBox episodeCheckBox) {
         episodePane.getChildren().add(episodeCheckBox.getCheckBox());
-        if(episodeCheckBox.isSelected()) {
+        if (episodeCheckBox.isSelected()) {
             StyleClasses.addStyle(episodeCheckBox.getCheckBox(), StyleClasses.SELECTED);
         }
         if (!episodeCheckBox.getEpisodeCheckBoxes().isEmpty() && ((ToggleButton) episodeCheckBox.getCheckBox().getGraphic()).isSelected()) {
@@ -138,7 +152,7 @@ public class MainAPP extends Application {
 
         Button clearButton = new Button(TextEnum.CLEAR_SELECTED_BUTTON_TEXT.getText());
         clearButton.setOnAction(evt -> {
-            String answer = dialogService.useConfirmDialog(TextEnum.RESET_SELECTED_TITLE.getText(), TextEnum.RESET_SELECTED_QUESTION.getText()).get().getText();
+            String answer = dialogService.useConfirmDialog(TextEnum.RESET_SELECTED_TITLE.getText(), TextEnum.RESET_SELECTED_QUESTION.getText());
             if (answer.equals(TextEnum.YES_TEXT.getText()) && manager.getSelectedButton() != null) {
                 manager.getSelectedButton().getStyleClass().remove(StyleClasses.SELECTED.getClassName());
                 manager.setSelectedButton(null);
@@ -148,8 +162,12 @@ public class MainAPP extends Application {
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
         exportButton.setOnAction(evt -> manager.exportCurrentItemMap());
-        Button copyButton = new Button(TextEnum.COPY_FILES.getText());
+        copyButton = new Button(TextEnum.COPY_FILES.getText());
         copyButton.setDisable(true);
+        copyButton.setOnAction(evt -> {
+            String path = dialogService.useTextInputDialog(TextEnum.COPY_FILE_TEXT_INPUT_TITLE.getText(), TextEnum.COPY_FILE_TEXT_INPUT_MESSAGE.getText(), TextEnum.DIRECTORY_FOR_COPY_FILES.getText());
+            manager.copyFilesTo(path);
+        });
         footerPane.getChildren().addAll(clearButton, exportButton, copyButton);
         footerPane.getChildren().forEach(node -> StyleClasses.addStyle(node, StyleClasses.MENU_BUTTON));
     }
@@ -158,7 +176,7 @@ public class MainAPP extends Application {
         episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
             EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
             newEpisodeCheckBox.createCheckBox(subEpisodeTitle);
-            if(subEpisode.isSelected()) {
+            if (subEpisode.isSelected()) {
                 newEpisodeCheckBox.setSelected(true);
                 newEpisodeCheckBox.getCheckBox().setSelected(true);
             }

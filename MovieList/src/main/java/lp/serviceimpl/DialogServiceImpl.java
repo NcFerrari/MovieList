@@ -35,11 +35,11 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
-    public Optional<ButtonType> useConfirmDialog(String title, String message) {
+    public String useConfirmDialog(String title, String message) {
         setDialog(Alert.AlertType.CONFIRMATION, title, message);
         dialog.getButtonTypes().clear();
         dialog.getButtonTypes().addAll(new ButtonType(TextEnum.YES_TEXT.getText()), new ButtonType(TextEnum.NO_TEXT.getText()));
-        return dialog.showAndWait();
+        return dialog.showAndWait().get().getText();
     }
 
     @Override

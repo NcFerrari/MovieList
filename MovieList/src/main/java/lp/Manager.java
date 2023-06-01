@@ -76,4 +76,10 @@ public class Manager {
         });
         return episode;
     }
+
+    public void copyFilesTo(String path) {
+        if (path != null) {
+            fileService.copyFilesTo(path, getImportedEpisode());
+        }
+    }
 }
