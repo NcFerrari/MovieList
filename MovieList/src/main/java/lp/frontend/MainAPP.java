@@ -20,7 +20,7 @@ import lp.serviceimpl.DialogServiceImpl;
 
 import java.awt.Toolkit;
 
-public class StartApp extends Application {
+public class MainAPP extends Application {
 
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
@@ -102,10 +102,10 @@ public class StartApp extends Application {
         if (manager.getSelectedButton() == null) {
             return;
         }
-        if (!manager.checkIfMapIsFilledWithSelectedButton()) {
+        if (!manager.checkIfEpisodeCheckBoxContainsSelectedButton()) {
             EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
             episodeCheckBox.createCheckBox(manager.getSelectedButton().getText());
-            episodeCheckBox = fillItem(episodeCheckBox, manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()));
+            episodeCheckBox = mapEpisodeToEpisodeCheckBox(episodeCheckBox, manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()));
             manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(manager.getSelectedButton().getText(), episodeCheckBox);
         }
         episodePane = new VBox();
@@ -122,6 +122,9 @@ public class StartApp extends Application {
 
     private void addToEpisodePane(VBox episodePane, EpisodeCheckBox episodeCheckBox) {
         episodePane.getChildren().add(episodeCheckBox.getCheckBox());
+        if(episodeCheckBox.isSelected()) {
+            StyleClasses.addStyle(episodeCheckBox.getCheckBox(), StyleClasses.SELECTED);
+        }
         if (!episodeCheckBox.getEpisodeCheckBoxes().isEmpty() && ((ToggleButton) episodeCheckBox.getCheckBox().getGraphic()).isSelected()) {
             episodeCheckBox.getEpisodeCheckBoxes().values().forEach(subEpisodeCheckBox -> addToEpisodePane(episodePane, subEpisodeCheckBox));
         }
@@ -151,10 +154,14 @@ public class StartApp extends Application {
         footerPane.getChildren().forEach(node -> StyleClasses.addStyle(node, StyleClasses.MENU_BUTTON));
     }
 
-    private EpisodeCheckBox fillItem(EpisodeCheckBox episodeCheckBox, Episode episode) {
-        episode.getSubEpisodes().keySet().forEach((subEpisodeTitle) -> {
+    private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(EpisodeCheckBox episodeCheckBox, Episode episode) {
+        episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
             EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
             newEpisodeCheckBox.createCheckBox(subEpisodeTitle);
+            if(subEpisode.isSelected()) {
+                newEpisodeCheckBox.setSelected(true);
+                newEpisodeCheckBox.getCheckBox().setSelected(true);
+            }
             episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
             if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
                 ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SUB_LIST.getText());
@@ -167,7 +174,7 @@ public class StartApp extends Application {
                     fillEpisodePane();
                 });
                 episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle).addToggleButton(toggleButton);
-                fillItem(episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle), episode.getSubEpisodes().get(subEpisodeTitle));
+                mapEpisodeToEpisodeCheckBox(episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle), episode.getSubEpisodes().get(subEpisodeTitle));
             }
         });
         return episodeCheckBox;

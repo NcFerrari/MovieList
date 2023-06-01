@@ -48,7 +48,7 @@ public class StartingDialog extends Application {
         alert.setTitle(TextEnum.INTRODUCE_DIALOG_TITLE.getText());
         alert.setHeaderText(TextEnum.INTRODUCE_DIALOG_TEXT.getText());
         alert.show();
-        final String[] code = {new String(), TextEnum.INTRODUCE_DIALOG_PASSWORD.getText()};
+        final String[] code = {new String(), TextEnum.INTRODUCE_DIALOG_LOADING_FROM_FILE_SYSTEM_CODE.getText(), TextEnum.INTRODUCE_DIALOG_LOADING_FILE_CODE.getText()};
         alert.getDialogPane().setOnKeyPressed(evt -> {
             code[0] += evt.getCode().toString();
             if (code[0].contains(code[1])) {
@@ -73,9 +73,21 @@ public class StartingDialog extends Application {
                 fileService.writeDataToJSON(TextEnum.IMPORT_FILE.getText(), episode);
                 manager.setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
                 try {
-                    StartApp.class.newInstance().start(new Stage());
+                    MainAPP.class.newInstance().start(new Stage());
                 } catch (Exception exp) {
                     dialogService.useErrorDialog(exp);
+                }
+            } else if (code[0].contains(code[2])) {
+                alert.close();
+                String path = dialogService.useTextInputDialog(TextEnum.LOAD_FILE_TITLE.getText(), TextEnum.LOAD_FILE_MESSAGE.getText(), TextEnum.EXPORT_FILE.getText() + TextEnum.EXPORT_FILE_SUFFIX.getText());
+                if (path != null) {
+                    String exportedFilePath = new File(path).getAbsolutePath();
+                    manager.setImportedEpisode(fileService.loadJSON(exportedFilePath, Episode.class));
+                    try {
+                        MainAPP.class.newInstance().start(new Stage());
+                    } catch (Exception exp) {
+                        dialogService.useErrorDialog(exp);
+                    }
                 }
             }
         });

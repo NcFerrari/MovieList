@@ -37,6 +37,7 @@
 
 .checkbox {
     -fx-background-color: #ffffff;
+    -fx-text-fill: black;
     -fx-border-color: red;
     -fx-border-width: 3px;
     -fx-font-size: 35px;
@@ -59,6 +60,7 @@
 
 .checkbox:selected {
     -fx-background-color: rgb(233, 238, 19);
+    -fx-text-fill: black;
 }
 
 .check-box:selected .mark {

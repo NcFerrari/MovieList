@@ -3,6 +3,7 @@ package lp.serviceimpl;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import lp.frontend.StartingDialog;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
@@ -56,6 +57,22 @@ public class DialogServiceImpl implements DialogService {
         setDialog(Alert.AlertType.ERROR, TextEnum.ERROR_TITLE.getText(), TextEnum.ERROR_MESSAGE.getText());
         dialog.getDialogPane().setContent(new TextArea(fullStackTrace));
         dialog.show();
+    }
+
+    @Override
+    public String useTextInputDialog(String title, String message, String promptText) {
+        TextInputDialog textInputDialog = new TextInputDialog();
+        textInputDialog.setTitle(title);
+        textInputDialog.setHeaderText(message);
+        textInputDialog.getEditor().setText(promptText);
+        Optional<String> input = null;
+        do {
+            input = textInputDialog.showAndWait();
+            if (!input.isPresent()) {
+                return null;
+            }
+        } while (textInputDialog.getEditor().getText().isEmpty());
+        return input.get();
     }
 
     private void setDialog(Alert.AlertType type, String title, String message) {

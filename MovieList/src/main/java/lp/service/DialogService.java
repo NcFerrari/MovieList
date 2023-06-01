@@ -13,4 +13,6 @@ public interface DialogService {
     void useInformationDialog(String title, String message);
 
     void useErrorDialog(Exception exp);
+
+    String useTextInputDialog(String title, String message, String promptText);
 }
