@@ -19,7 +19,10 @@ public enum TextEnum {
     RESET_SELECTED_TITLE("Resetovat vybrané položky?"),
     RESET_SELECTED_QUESTION("Opravdu si přeješ resetovat celý výběr?"),
     YES("Ano"),
-    NO("Ne");
+    NO("Ne"), SUCCESS_TITLE("Úspěšně exportováno"),
+    SUCCESS_EXPORT("HOTOVO!\nGenerování souboru " + EXPORT_FILE.getText() + " se podařilo."),
+    ERROR_TITLE("Chybová hláška"),
+    ERROR_MESSAGE("No ty koki! Něco se posralo a je třeba to řešit. Následující chybu zkopíruj a pošli Lubovi\n\n");
 
     private String text;
 

@@ -55,11 +55,22 @@ public class Manager {
     }
 
     public void exportCurrentItemMap() {
-        fileService.writeDataToJSON(TextEnum.EXPORT_FILE.getText(), mappingCurrentItemMapIntoEpisodeDTO(preparedEpisodeCheckBoxToExport));
+        try {
+            Episode rootEpisode = new Episode(importedEpisode.getTitle());
+            if (Math.random() > 0.001) throw new RuntimeException("huga čaga");
+            fileService.writeDataToJSON(TextEnum.EXPORT_FILE.getText(), mappingCurrentItemMapIntoEpisodeDTO(rootEpisode, preparedEpisodeCheckBoxToExport));
+            dialogService.useInformationDialog(TextEnum.SUCCESS_TITLE.getText(), TextEnum.SUCCESS_EXPORT.getText());
+        } catch (Exception exp) {
+            dialogService.useErrorDialog(exp);
+        }
     }
 
-    private Episode mappingCurrentItemMapIntoEpisodeDTO(EpisodeCheckBox episodeCheckBox) {
-        Episode exportedEpisode = new Episode();
-        return exportedEpisode;
+    private Episode mappingCurrentItemMapIntoEpisodeDTO(Episode episode, EpisodeCheckBox episodeCheckBox) {
+        episodeCheckBox.getEpisodeCheckBoxes().forEach((checkBoxTitle, subEpisodeCheckBox) -> {
+            Episode subEpisode = new Episode(checkBoxTitle);
+            subEpisode.setSelected(subEpisodeCheckBox.isSelected());
+            episode.getSubEpisodes().put(checkBoxTitle, mappingCurrentItemMapIntoEpisodeDTO(subEpisode, subEpisodeCheckBox));
+        });
+        return episode;
     }
 }

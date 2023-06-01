@@ -11,4 +11,6 @@ public interface DialogService {
     Optional<ButtonType> useConfirmDialog(String title, String message);
 
     void useInformationDialog(String title, String message);
+
+    void useErrorDialog(Exception exp);
 }
