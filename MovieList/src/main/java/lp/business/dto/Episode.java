@@ -12,7 +12,7 @@ public class Episode {
 
     private String title;
     private boolean selected;
-    private Map<String, Episode> episodes = new LinkedHashMap<>();
+    private Map<String, Episode> subEpisodes = new LinkedHashMap<>();
 
     public Episode(String title) {
         this.title = title;

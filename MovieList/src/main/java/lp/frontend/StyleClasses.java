@@ -1,5 +1,6 @@
 package lp.frontend;
 
+import javafx.scene.Node;
 import lombok.Getter;
 
 @Getter
@@ -15,5 +16,9 @@ public enum StyleClasses {
 
     StyleClasses(String className) {
         this.className = className;
+    }
+
+    public static void addStyle(Node node, StyleClasses style) {
+        node.getStyleClass().add(style.getClassName());
     }
 }
