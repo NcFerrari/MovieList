@@ -57,4 +57,13 @@ public class Manager {
     public boolean checkIfMapIsFilledWithSelectedButton() {
         return getCurrentItemMap().containsKey(getSelectedButton().getText());
     }
+
+    public void exportCurrentItemMap() {
+        fileService.writeDataToJSON(TextEnum.EXPORT_FILE.getText(), mappingCurrentItemMapIntoEpisodeDTO(currentItemMap));
+    }
+
+    private Episode mappingCurrentItemMapIntoEpisodeDTO(Map<String, EpisodeCheckBox> currentItemMap) {
+        Episode exportedEpisode = new Episode();
+        return exportedEpisode;
+    }
 }

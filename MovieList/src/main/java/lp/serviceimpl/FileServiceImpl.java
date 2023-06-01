@@ -19,21 +19,26 @@ public class FileServiceImpl implements FileService {
         return fileService;
     }
 
-    @Override
-    public void writeDataToJSON(String pathOfFiles, String pathForJSON) {
-        File rootFile = new File(pathOfFiles);
-        if (!rootFile.exists()) {
-            return;
-        }
-        Episode episode = new Episode(rootFile.getName());
-        fillEpisode(rootFile, episode);
 
+    @Override
+    public void writeDataToJSON(String pathForJSON, Episode episode) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
         } catch (IOException exp) {
             exp.printStackTrace();
         }
+    }
+
+    @Override
+    public Episode getEpisodeObjectFromFileSystem(String pathOfFiles) {
+        File rootFile = new File(pathOfFiles);
+        if (!rootFile.exists()) {
+            return null;
+        }
+        Episode episode = new Episode(rootFile.getName());
+        fillEpisode(rootFile, episode);
+        return episode;
     }
 
     @Override

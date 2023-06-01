@@ -71,8 +71,10 @@ public class StartApp extends Application {
             manager.getSelectedButton().getStyleClass().remove(StyleClasses.SELECTED.getClassName());
             manager.setScrollPanePosition(episodeScrollPane.getVvalue());
         }
-        manager.setSelectedButton(clickedButton);
-        StyleClasses.addStyle(manager.getSelectedButton(), StyleClasses.SELECTED);
+        if (clickedButton != null) {
+            manager.setSelectedButton(clickedButton);
+            StyleClasses.addStyle(manager.getSelectedButton(), StyleClasses.SELECTED);
+        }
     }
 
     private void setEpisodePane() {
@@ -134,12 +136,14 @@ public class StartApp extends Application {
         clearButton.setOnAction(evt -> {
             String answer = dialogService.useConfirmDialog(TextEnum.RESET_SELECTED_TITLE.getText(), TextEnum.RESET_SELECTED_QUESTION.getText()).get().getText();
             if (answer.equals(TextEnum.YES.getText())) {
-                manager.getCurrentItemMap().forEach((episodeTitle, episodeCheckBox) -> {
-
-                });
+                manager.getSelectedButton().getStyleClass().remove(StyleClasses.SELECTED.getClassName());
+                manager.setSelectedButton(null);
+                manager.getCurrentItemMap().clear();
+                episodePane.getChildren().clear();
             }
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
+        exportButton.setOnAction(evt -> manager.exportCurrentItemMap());
         Button copyButton = new Button(TextEnum.COPY_FILES.getText());
         copyButton.setDisable(true);
         footerPane.getChildren().addAll(clearButton, exportButton, copyButton);

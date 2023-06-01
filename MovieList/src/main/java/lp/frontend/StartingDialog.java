@@ -53,7 +53,8 @@ public class StartingDialog extends Application {
                 System.exit(0);
             }
         } while (textInputDialog.getEditor().getText().isEmpty() || !new File(textInputDialog.getEditor().getText()).exists());
-        fileService.writeDataToJSON(textInputDialog.getEditor().getText(), TextEnum.IMPORT_FILE.getText());
+        Episode episode = fileService.getEpisodeObjectFromFileSystem(textInputDialog.getEditor().getText());
+        fileService.writeDataToJSON(TextEnum.IMPORT_FILE.getText(), episode);
         manager.setImportedEpisode(fileService.loadJSON(TextEnum.IMPORT_FILE.getText(), Episode.class));
         try {
             StartApp.class.newInstance().start(new Stage());

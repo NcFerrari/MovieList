@@ -1,10 +1,14 @@
 package lp.service;
 
+import lp.business.dto.Episode;
+
 import java.io.File;
 
 public interface FileService {
 
-    void writeDataToJSON(String pathOfFiles, String pathForJSON);
+    Episode getEpisodeObjectFromFileSystem(String pathOfFiles);
+
+    void writeDataToJSON(String pathForJSON, Episode episode);
 
     File getFile(String text);
 
