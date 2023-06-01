@@ -16,7 +16,7 @@ public class EpisodeCheckBox {
     private double scrollPanePosition;
     private Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
 
-    public EpisodeCheckBox(String title) {
+    public void createCheckBox(String title) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));

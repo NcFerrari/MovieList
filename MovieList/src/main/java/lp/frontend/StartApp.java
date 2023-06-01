@@ -103,20 +103,21 @@ public class StartApp extends Application {
             return;
         }
         if (!manager.checkIfMapIsFilledWithSelectedButton()) {
-            EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox(manager.getSelectedButton().getText());
+            EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
+            episodeCheckBox.createCheckBox(manager.getSelectedButton().getText());
             episodeCheckBox = fillItem(episodeCheckBox, manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()));
-            manager.getCurrentItemMap().put(manager.getSelectedButton().getText(), episodeCheckBox);
+            manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(manager.getSelectedButton().getText(), episodeCheckBox);
         }
         episodePane = new VBox();
         episodePane.setStyle("-fx-background-color: #7e6969");
         episodePane.setMinWidth(mainPane.getWidth() / 2);
         episodeScrollPane.setContent(episodePane);
 
-        manager.getCurrentItemMap().get(manager.getSelectedButton().getText()).getEpisodeCheckBoxes().values().forEach(episodeCheckBox -> {
+        manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().get(manager.getSelectedButton().getText()).getEpisodeCheckBoxes().values().forEach(episodeCheckBox -> {
             addToEpisodePane(episodePane, episodeCheckBox);
         });
         resize();
-        episodeScrollPane.setVvalue(manager.getCurrentItemMap().get(manager.getSelectedButton().getText()).getScrollPanePosition());
+        episodeScrollPane.setVvalue(manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().get(manager.getSelectedButton().getText()).getScrollPanePosition());
     }
 
     private void addToEpisodePane(VBox episodePane, EpisodeCheckBox episodeCheckBox) {
@@ -138,7 +139,7 @@ public class StartApp extends Application {
             if (answer.equals(TextEnum.YES.getText())) {
                 manager.getSelectedButton().getStyleClass().remove(StyleClasses.SELECTED.getClassName());
                 manager.setSelectedButton(null);
-                manager.getCurrentItemMap().clear();
+                manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().clear();
                 episodePane.getChildren().clear();
             }
         });
@@ -152,7 +153,9 @@ public class StartApp extends Application {
 
     private EpisodeCheckBox fillItem(EpisodeCheckBox episodeCheckBox, Episode episode) {
         episode.getSubEpisodes().keySet().forEach((subEpisodeTitle) -> {
-            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, new EpisodeCheckBox(subEpisodeTitle));
+            EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
+            newEpisodeCheckBox.createCheckBox(subEpisodeTitle);
+            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
             if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
                 ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SUB_LIST.getText());
                 toggleButton.setOnAction(action -> {

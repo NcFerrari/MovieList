@@ -1,7 +1,6 @@
 package lp;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
 import lombok.Data;
 import lp.business.dto.Episode;
 import lp.frontend.EpisodeCheckBox;
@@ -11,9 +10,6 @@ import lp.service.DialogService;
 import lp.service.FileService;
 import lp.serviceimpl.DialogServiceImpl;
 import lp.serviceimpl.FileServiceImpl;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Data
 public class Manager {
@@ -32,7 +28,7 @@ public class Manager {
 
     private final FileService fileService = FileServiceImpl.getInstance();
     private final DialogService dialogService = DialogServiceImpl.getInstance();
-    private final Map<String, EpisodeCheckBox> currentItemMap = new LinkedHashMap<>();
+    private EpisodeCheckBox preparedEpisodeCheckBoxToExport = new EpisodeCheckBox();
 
     private Episode importedEpisode;
     private Button selectedButton;
@@ -51,18 +47,18 @@ public class Manager {
     }
 
     public void setScrollPanePosition(double value) {
-        getCurrentItemMap().get(getSelectedButton().getText()).setScrollPanePosition(value);
+        getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().get(getSelectedButton().getText()).setScrollPanePosition(value);
     }
 
     public boolean checkIfMapIsFilledWithSelectedButton() {
-        return getCurrentItemMap().containsKey(getSelectedButton().getText());
+        return getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().containsKey(getSelectedButton().getText());
     }
 
     public void exportCurrentItemMap() {
-        fileService.writeDataToJSON(TextEnum.EXPORT_FILE.getText(), mappingCurrentItemMapIntoEpisodeDTO(currentItemMap));
+        fileService.writeDataToJSON(TextEnum.EXPORT_FILE.getText(), mappingCurrentItemMapIntoEpisodeDTO(preparedEpisodeCheckBoxToExport));
     }
 
-    private Episode mappingCurrentItemMapIntoEpisodeDTO(Map<String, EpisodeCheckBox> currentItemMap) {
+    private Episode mappingCurrentItemMapIntoEpisodeDTO(EpisodeCheckBox episodeCheckBox) {
         Episode exportedEpisode = new Episode();
         return exportedEpisode;
     }
