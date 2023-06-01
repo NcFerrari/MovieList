@@ -1,6 +1,7 @@
 package lp.serviceimpl;
 
 import lp.business.dto.Episode;
+import lp.service.DialogService;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 public class FileServiceImpl implements FileService {
+
+    private final static DialogService dialogService = DialogServiceImpl.getInstance();
 
     private static FileServiceImpl fileService;
 
@@ -26,7 +29,7 @@ public class FileServiceImpl implements FileService {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(Paths.get(pathForJSON).toFile(), episode);
         } catch (IOException exp) {
-            exp.printStackTrace();
+            dialogService.useErrorDialog(exp);
         }
     }
 
@@ -52,8 +55,8 @@ public class FileServiceImpl implements FileService {
         try {
             ObjectMapper mapper = new ObjectMapper();
             result = mapper.readValue(Paths.get(path).toFile(), returnedClass);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
         }
         return result;
     }

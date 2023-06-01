@@ -37,7 +37,7 @@ public class DialogServiceImpl implements DialogService {
     public Optional<ButtonType> useConfirmDialog(String title, String message) {
         setDialog(Alert.AlertType.CONFIRMATION, title, message);
         dialog.getButtonTypes().clear();
-        dialog.getButtonTypes().addAll(new ButtonType(TextEnum.YES.getText()), new ButtonType(TextEnum.NO.getText()));
+        dialog.getButtonTypes().addAll(new ButtonType(TextEnum.YES_TEXT.getText()), new ButtonType(TextEnum.NO_TEXT.getText()));
         return dialog.showAndWait();
     }
 
@@ -62,6 +62,8 @@ public class DialogServiceImpl implements DialogService {
         if (dialog == null) {
             dialog = new Alert(type);
         }
+        dialog.getButtonTypes().clear();
+        dialog.getButtonTypes().addAll(new ButtonType(TextEnum.OK_TEXT.getText()));
         dialog.setAlertType(type);
         dialog.setTitle(title);
         dialog.setHeaderText(message);

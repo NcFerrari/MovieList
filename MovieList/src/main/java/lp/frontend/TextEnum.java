@@ -18,8 +18,9 @@ public enum TextEnum {
     COPY_FILES("Zkopíruj vybrané položky"),
     RESET_SELECTED_TITLE("Resetovat vybrané položky?"),
     RESET_SELECTED_QUESTION("Opravdu si přeješ resetovat celý výběr?"),
-    YES("Ano"),
-    NO("Ne"), SUCCESS_TITLE("Úspěšně exportováno"),
+    YES_TEXT("Ano"),
+    NO_TEXT("Ne"), SUCCESS_TITLE("Úspěšně exportováno"),
+    OK_TEXT("Ok"),
     SUCCESS_EXPORT("HOTOVO!\nGenerování souboru " + EXPORT_FILE.getText() + " se podařilo."),
     ERROR_TITLE("Chybová hláška"),
     ERROR_MESSAGE("No ty koki! Něco se posralo a je třeba to řešit. Následující chybu zkopíruj a pošli Lubovi\n\n");

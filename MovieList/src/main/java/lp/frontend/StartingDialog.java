@@ -5,13 +5,17 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import lp.Manager;
 import lp.business.dto.Episode;
+import lp.service.DialogService;
 import lp.service.FileService;
+import lp.serviceimpl.DialogServiceImpl;
 import lp.serviceimpl.FileServiceImpl;
 
 import java.io.File;
 import java.util.Optional;
 
 public class StartingDialog extends Application {
+
+    private final static DialogService dialogService = DialogServiceImpl.getInstance();
 
     private Manager manager = Manager.getInstance();
     private static String title;
@@ -59,7 +63,7 @@ public class StartingDialog extends Application {
         try {
             StartApp.class.newInstance().start(new Stage());
         } catch (Exception exp) {
-            exp.printStackTrace();
+            dialogService.useErrorDialog(exp);
         }
     }
 }
