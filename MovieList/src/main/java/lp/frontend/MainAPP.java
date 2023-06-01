@@ -139,7 +139,7 @@ public class MainAPP extends Application {
         Button clearButton = new Button(TextEnum.CLEAR_SELECTED_BUTTON_TEXT.getText());
         clearButton.setOnAction(evt -> {
             String answer = dialogService.useConfirmDialog(TextEnum.RESET_SELECTED_TITLE.getText(), TextEnum.RESET_SELECTED_QUESTION.getText()).get().getText();
-            if (answer.equals(TextEnum.YES_TEXT.getText())) {
+            if (answer.equals(TextEnum.YES_TEXT.getText()) && manager.getSelectedButton() != null) {
                 manager.getSelectedButton().getStyleClass().remove(StyleClasses.SELECTED.getClassName());
                 manager.setSelectedButton(null);
                 manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().clear();

@@ -60,7 +60,6 @@
 
 .checkbox:selected {
     -fx-background-color: rgb(233, 238, 19);
-    -fx-text-fill: black;
 }
 
 .check-box:selected .mark {
