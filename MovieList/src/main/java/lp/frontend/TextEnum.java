@@ -39,7 +39,10 @@ public enum TextEnum {
     COPY_FILE_TEXT_INPUT_MESSAGE("Zadej cestu a složku, do které se bude kopírovat"),
     COPY_FILE_TEXT_INPUT_TITLE("Kopírování vybraných souborů"),
     DIR_NOT_EXISTS_TITLE("Neexistující soubor"),
-    DIR_NOT_EXISTS_MESSAGE("Adresář neexistuje.\nMá se vytvořit?");
+    DIR_NOT_EXISTS_MESSAGE("Adresář neexistuje.\nMá se vytvořit?"),
+    SUCCESS_COPPIED_TITLE("Kopírování dokončeno"),
+    SUCCESS_COPPIED_MESSAGE("Úspěšně dokopírováno "),
+    FILES(" souborů!");
 
     private String text;
 

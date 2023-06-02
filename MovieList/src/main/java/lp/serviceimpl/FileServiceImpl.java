@@ -8,11 +8,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class FileServiceImpl implements FileService {
 
     private final static DialogService dialogService = DialogServiceImpl.getInstance();
+    private final int[] counter = new int[]{0};
 
     private static FileServiceImpl fileService;
 
@@ -63,20 +65,39 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void copyFilesTo(String path, Episode episode) {
-        File newFilesDir = new File(path);
+    public void copyFilesTo(String newPath, Episode episode) {
+        File newFilesDir = new File(newPath);
         if (!newFilesDir.exists()) {
             if (TextEnum.NO_TEXT.getText().equals(dialogService.useConfirmDialog(TextEnum.DIR_NOT_EXISTS_TITLE.getText(), TextEnum.DIR_NOT_EXISTS_MESSAGE.getText()))) {
                 return;
             }
             newFilesDir.mkdir();
         }
-        String rootPath = episode.getTitle();
-        copyFiles(rootPath);
+        counter[0] = 0;
+        String oldPath = episode.getTitle();
+        copyFiles(oldPath, newPath, episode);
     }
 
-    private void copyFiles(String rootPath) {
-        System.out.println(rootPath);
+    private void copyFiles(String oldPath, String newPath, Episode episode) {
+        episode.getSubEpisodes().values().forEach(subEpisode -> {
+            if (subEpisode.isSelected()) {
+                File sourceFile = new File(oldPath + "/" + subEpisode.getTitle());
+                File targetFile = new File(newPath + "/" + subEpisode.getTitle());
+                try {
+                    if (!targetFile.exists()) {
+                        targetFile.getParentFile().mkdirs();
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                        counter[0]++;
+                    }
+                } catch (IOException exp) {
+                    dialogService.useErrorDialog(exp);
+                }
+            }
+            if (!subEpisode.getSubEpisodes().isEmpty()) {
+                copyFiles(oldPath + "/" + subEpisode.getTitle(), newPath + "/" + subEpisode.getTitle(), subEpisode);
+            }
+        });
+        dialogService.useInformationDialog(TextEnum.SUCCESS_COPPIED_TITLE.getText(), TextEnum.SUCCESS_COPPIED_MESSAGE.getText() + counter[0] + TextEnum.FILES.getText());
     }
 
     private void fillEpisode(File file, Episode episode) {
@@ -85,7 +106,7 @@ public class FileServiceImpl implements FileService {
                 if (excludeFiles(subFile.getName())) {
                     continue;
                 }
-                String subFileName = subFile.isDirectory() ? subFile.getName() : subFile.getName().substring(0, subFile.getName().length() - 4);
+                String subFileName = subFile.getName();
                 Episode subEpisode = new Episode(subFileName);
                 if (subFile.isDirectory()) {
                     fillEpisode(subFile, subEpisode);
