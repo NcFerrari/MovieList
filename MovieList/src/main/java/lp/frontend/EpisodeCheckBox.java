@@ -21,8 +21,21 @@ public class EpisodeCheckBox {
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));
         checkBox.setTooltip(checkBoxTooltip);
-        checkBox.setOnAction(evt -> selected = checkBox.isSelected());
+        checkBox.setOnAction(evt -> {
+            selected = checkBox.isSelected();
+            selectOrDeselect(selected, episodeCheckBoxes);
+        });
         StyleClasses.addStyle(checkBox, StyleClasses.CHECKBOX);
+    }
+
+    private void selectOrDeselect(boolean selected, Map<String, EpisodeCheckBox> episodeCheckBoxes) {
+        episodeCheckBoxes.values().forEach(episodeCheckBoxList -> {
+            episodeCheckBoxList.getCheckBox().setSelected(selected);
+            episodeCheckBoxList.setSelected(selected);
+            if (!episodeCheckBoxList.getEpisodeCheckBoxes().isEmpty()) {
+                selectOrDeselect(selected, episodeCheckBoxList.getEpisodeCheckBoxes());
+            }
+        });
     }
 
     public void addToggleButton(ToggleButton toggleButton) {

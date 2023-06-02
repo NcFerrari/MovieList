@@ -1,12 +1,10 @@
 package lp.serviceimpl;
 
 import lp.business.dto.Episode;
-import lp.frontend.EpisodeCheckBox;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +71,12 @@ public class FileServiceImpl implements FileService {
             }
             newFilesDir.mkdir();
         }
+        String rootPath = episode.getTitle();
+        copyFiles(rootPath);
+    }
 
+    private void copyFiles(String rootPath) {
+        System.out.println(rootPath);
     }
 
     private void fillEpisode(File file, Episode episode) {

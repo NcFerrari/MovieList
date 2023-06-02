@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -96,8 +98,9 @@ public class MainAPP extends Application {
             if (sceneKeyEvents[0].contains(sceneKeyEvents[1])) {
                 copyButton.setDisable(!copyButton.isDisabled());
                 sceneKeyEvents[0] = "";
-            } else if (sceneKeyEvents[0].contains("MAGDA")) {
-                copyButton.setText("To víš že jo:) ,,I,,");
+            } else {
+                copyButton.setText(TextEnum.COPY_FILES.getText());
+                copyButton.setGraphic(null);
             }
             if (sceneKeyEvents[0].length() > 100) {
                 sceneKeyEvents[0] = "";
