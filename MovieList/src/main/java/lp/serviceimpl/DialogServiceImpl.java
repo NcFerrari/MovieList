@@ -50,6 +50,7 @@ public class DialogServiceImpl implements DialogService {
 
     @Override
     public void useErrorDialog(Exception exp) {
+        exp.printStackTrace();
         String fullStackTrace = exp + "\n\n";
         for (StackTraceElement stackTraceElement : exp.getStackTrace()) {
             fullStackTrace += stackTraceElement + "\n";

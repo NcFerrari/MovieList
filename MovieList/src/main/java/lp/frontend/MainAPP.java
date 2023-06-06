@@ -214,6 +214,7 @@ public class MainAPP extends Application {
     private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(EpisodeCheckBox episodeCheckBox, Episode episode) {
         episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
             EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
+            System.out.println(subEpisodeTitle);
             newEpisodeCheckBox.createCheckBox(subEpisode.getSubEpisodes().isEmpty() ? subEpisodeTitle.substring(0, subEpisodeTitle.length() - 4) : subEpisodeTitle, totalSelectedCounter);
             if (subEpisode.isSelected()) {
                 newEpisodeCheckBox.setSelected(true);
