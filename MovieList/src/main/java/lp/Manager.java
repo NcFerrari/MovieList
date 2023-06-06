@@ -77,6 +77,7 @@ public class Manager {
         episodeCheckBox.getEpisodeCheckBoxes().forEach((checkBoxTitle, subEpisodeCheckBox) -> {
             Episode subEpisode = new Episode(checkBoxTitle);
             subEpisode.setSelected(subEpisodeCheckBox.isSelected());
+            subEpisode.setSize(subEpisodeCheckBox.getSize());
             episode.getSubEpisodes().put(checkBoxTitle, mappingCurrentItemMapIntoEpisodeDTO(subEpisode, subEpisodeCheckBox));
         });
         return episode;
