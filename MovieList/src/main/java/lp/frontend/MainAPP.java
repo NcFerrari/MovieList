@@ -8,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -183,6 +181,8 @@ public class MainAPP extends Application {
                 newEpisodeCheckBox.setSelected(true);
                 newEpisodeCheckBox.getCheckBox().setSelected(true);
             }
+            newEpisodeCheckBox.getEpisodeParents().addAll(episodeCheckBox.getEpisodeParents());
+            newEpisodeCheckBox.getEpisodeParents().add(episodeCheckBox);
             episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
             if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
                 ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SUB_LIST.getText());

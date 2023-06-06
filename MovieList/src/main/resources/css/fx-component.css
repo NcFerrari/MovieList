@@ -28,6 +28,7 @@
 .menu-button:hover, .selected {
     -fx-background-color: purple;
     -fx-text-fill: yellow;
+    -fx-cursor: hand;
 }
 
 .menu-button:pressed {

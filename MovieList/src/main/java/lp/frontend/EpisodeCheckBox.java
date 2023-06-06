@@ -4,17 +4,23 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 public class EpisodeCheckBox {
     private CheckBox checkBox;
     private boolean selected;
     private double scrollPanePosition;
+    private List<EpisodeCheckBox> episodeParents = new ArrayList<>();
     private Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
+    private int[] countOfEpisodes = new int[]{0};
 
     public void createCheckBox(String title) {
         checkBox = new CheckBox(title);
@@ -22,10 +28,31 @@ public class EpisodeCheckBox {
         checkBoxTooltip.setFont(new Font("Arial", 16));
         checkBox.setTooltip(checkBoxTooltip);
         checkBox.setOnAction(evt -> {
-            selected = checkBox.isSelected();
+            setSelected(checkBox.isSelected());
             selectOrDeselect(selected, episodeCheckBoxes);
+            checkParentSelection();
         });
         StyleClasses.addStyle(checkBox, StyleClasses.CHECKBOX);
+    }
+
+    private void checkParentSelection() {
+        for (int i = episodeParents.size() - 1; i > 0; i--) {
+            countOfEpisodes[0] = 0;
+            for (EpisodeCheckBox episodeCheckBox : episodeParents.get(i).getEpisodeCheckBoxes().values()) {
+                if (episodeCheckBox.isSelected()) {
+                    countOfEpisodes[0] = countOfEpisodes[0] + 1;
+                } else {
+                    break;
+                }
+            }
+            if (countOfEpisodes[0] == episodeParents.get(i).getEpisodeCheckBoxes().size()) {
+                episodeParents.get(i).setSelected(true);
+                episodeParents.get(i).getCheckBox().setSelected(true);
+            } else {
+                episodeParents.get(i).setSelected(false);
+                episodeParents.get(i).getCheckBox().setSelected(false);
+            }
+        }
     }
 
     private void selectOrDeselect(boolean selected, Map<String, EpisodeCheckBox> episodeCheckBoxes) {
