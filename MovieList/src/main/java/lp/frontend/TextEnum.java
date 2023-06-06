@@ -31,7 +31,7 @@ public enum TextEnum {
     ERROR_TITLE("Chybová hláška"),
     ERROR_MESSAGE("No ty koki! Něco se posralo a je třeba to řešit. Následující chybu zkopíruj a pošli Lubovi\n\n"),
     INTRODUCE_DIALOG_TITLE("Nutný soubor"),
-    INTRODUCE_DIALOG_TEXT("Je potřeba soubor " + IMPORT_FILE.getText()),
+    INTRODUCE_DIALOG_TEXT("Je potřeba soubor " + IMPORT_FILE.getText() + "\nTento soubor musí být vedle tohoto programu."),
     EXPORT_FILE_TITLE("Název nového souboru pro export"),
     EXPORT_FILE_MESSAGE("Zadejte prosím název nového souboru, do kterého se vyexportují potřebná data"),
     LOAD_FILE_TITLE("Načítání ze souboru"),
