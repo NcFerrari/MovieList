@@ -129,7 +129,7 @@ public class FileServiceImpl implements FileService {
 
     private void copyFiles(String oldPath, String newPath, Episode episode) {
         episode.getSubEpisodes().values().forEach(subEpisode -> {
-            if (subEpisode.isSelected()) {
+            if (subEpisode.isSelected() && subEpisode.getSubEpisodes().isEmpty()) {
                 File sourceFile = new File(oldPath + "/" + subEpisode.getTitle());
                 File targetFile = new File(newPath + "/" + subEpisode.getTitle());
                 try {
