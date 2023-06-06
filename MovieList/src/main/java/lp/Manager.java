@@ -32,6 +32,7 @@ public class Manager {
 
     private Episode importedEpisode;
     private Button selectedButton;
+    private String noteText;
 
     public void startApplication() {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
@@ -62,6 +63,7 @@ public class Manager {
             }
             Episode rootEpisode = new Episode(importedEpisode.getTitle());
             fileService.writeDataToJSON(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), mappingCurrentItemMapIntoEpisodeDTO(rootEpisode, preparedEpisodeCheckBoxToExport));
+            fileService.addToFile(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), getNoteText());
             dialogService.useInformationDialog(TextEnum.SUCCESS_TITLE.getText(), TextEnum.SUCCESS_EXPORT_PREFIX.getText() + fileName + TextEnum.EXPORT_FILE_SUFFIX.getText() + TextEnum.SUCCESS_EXPORT_SUFFIX.getText());
         } catch (Exception exp) {
             dialogService.useErrorDialog(exp);

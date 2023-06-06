@@ -6,7 +6,9 @@ import lp.service.DialogService;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -76,6 +78,24 @@ public class FileServiceImpl implements FileService {
         counter[0] = 0;
         String oldPath = episode.getTitle();
         copyFiles(oldPath, newPath, episode);
+    }
+
+    @Override
+    public void addToFile(String pathForFile, String text) {
+        File file = new File(pathForFile);
+        if (!file.exists()) {
+            return;
+        }
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+            bw.newLine();
+            bw.write(TextEnum.NOTE_SEPARATOR.getText());
+            bw.newLine();
+            bw.write(text);
+            bw.close();
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
+        }
     }
 
     private void copyFiles(String oldPath, String newPath, Episode episode) {

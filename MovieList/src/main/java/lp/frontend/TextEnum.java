@@ -42,7 +42,9 @@ public enum TextEnum {
     DIR_NOT_EXISTS_MESSAGE("Adresář neexistuje.\nMá se vytvořit?"),
     SUCCESS_COPPIED_TITLE("Kopírování dokončeno"),
     SUCCESS_COPPIED_MESSAGE("Úspěšně dokopírováno "),
-    FILES(" souborů!");
+    FILES(" souborů!"),
+    NOTES_TITLE("Poznámky"),
+    NOTE_SEPARATOR("======================== Inserted noted ======================== ");
 
     private String text;
 

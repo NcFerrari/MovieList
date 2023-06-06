@@ -1,7 +1,6 @@
 package lp.service;
 
 import lp.business.dto.Episode;
-import lp.frontend.EpisodeCheckBox;
 
 import java.io.File;
 
@@ -16,4 +15,6 @@ public interface FileService {
     <T> T loadJSON(String path, Class<T> returnedClass);
 
     void copyFilesTo(String path, Episode episode);
+
+    void addToFile(String pathForFile, String text);
 }

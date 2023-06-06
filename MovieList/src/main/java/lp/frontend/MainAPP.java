@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -30,8 +33,10 @@ public class MainAPP extends Application {
     private FlowPane menuPane;
     private ScrollPane episodeScrollPane;
     private VBox episodePane;
+    private TabPane areaPane;
     private FlowPane footerPane;
     private Button copyButton;
+    private TextArea textArea;
 
     public void start(Stage stage) {
         mainPane = new BorderPane();
@@ -47,9 +52,25 @@ public class MainAPP extends Application {
         mainPane.setTop(menuPane);
         setMenu();
         setEpisodePane();
-        setStageListeners(stage);
+        setTabPane();
         setFooter();
+        setStageListeners(stage);
         resize();
+    }
+
+    private void setTabPane() {
+        areaPane = new TabPane();
+        mainPane.setRight(areaPane);
+        setNotePane(areaPane);
+    }
+
+    private void setNotePane(TabPane areaPane) {
+        Tab tab = new Tab(TextEnum.NOTES_TITLE.getText());
+        textArea = new TextArea();
+        textArea.setWrapText(true);
+        tab.setContent(textArea);
+        tab.setClosable(false);
+        areaPane.getTabs().addAll(tab);
     }
 
     private void setMenu() {
@@ -107,9 +128,10 @@ public class MainAPP extends Application {
     }
 
     private void resize() {
-        if (episodePane != null) {
+        if (episodePane != null && areaPane != null) {
             episodePane.setPrefSize(mainPane.getWidth() / 2, mainPane.getHeight() - menuPane.getHeight() - footerPane.getHeight());
             episodePane.getChildren().stream().forEach(item -> ((CheckBox) item).setPrefWidth(mainPane.getWidth() / 2 - 20));
+            areaPane.setPrefSize(mainPane.getWidth() / 2, mainPane.getHeight() - menuPane.getHeight() - footerPane.getHeight());
         }
     }
 
@@ -162,7 +184,10 @@ public class MainAPP extends Application {
             }
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
-        exportButton.setOnAction(evt -> manager.exportCurrentItemMap());
+        exportButton.setOnAction(evt -> {
+            manager.setNoteText(textArea.getText());
+            manager.exportCurrentItemMap();
+        });
         copyButton = new Button(TextEnum.COPY_FILES.getText());
         copyButton.setDisable(true);
         copyButton.setOnAction(evt -> {
