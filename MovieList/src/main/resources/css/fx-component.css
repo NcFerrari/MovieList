@@ -90,3 +90,10 @@
     -fx-font-weight: bold;
     -fx-font-size: 18px;
 }
+
+.label {
+    -fx-font-size: 20px;
+    -fx-font-family: Verdana;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
