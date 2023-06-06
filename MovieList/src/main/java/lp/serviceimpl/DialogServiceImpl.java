@@ -57,7 +57,7 @@ public class DialogServiceImpl implements DialogService {
         }
         setDialog(Alert.AlertType.ERROR, TextEnum.ERROR_TITLE.getText(), TextEnum.ERROR_MESSAGE.getText());
         dialog.getDialogPane().setContent(new TextArea(fullStackTrace));
-        dialog.show();
+        dialog.showAndWait();
     }
 
     @Override
