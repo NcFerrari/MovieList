@@ -3,7 +3,7 @@
 }
 
 .menu {
-    -fx-background-color: yellow;
+    -fx-background-color: #ec791a;
     -fx-border-color: purple;
     -fx-background-radius: 15;
 }
@@ -26,14 +26,13 @@
 }
 
 .menu-button:hover, .selected {
-    -fx-background-color: purple;
-    -fx-text-fill: yellow;
+    -fx-background-color: rgba(128, 0, 128, 0.42);
+    -fx-text-fill: #dca577;
     -fx-cursor: hand;
 }
 
 .menu-button:pressed {
-    -fx-background-color: yellow;
-    -fx-text-fill: purple;
+    -fx-background-color: rgba(128, 0, 128, 1);
 }
 
 .checkbox {
@@ -60,7 +59,7 @@
 }
 
 .checkbox:selected {
-    -fx-background-color: rgb(233, 238, 19);
+    -fx-background-color: #ec791a;
 }
 
 .check-box:selected .mark {
@@ -96,4 +95,9 @@
     -fx-font-family: Verdana;
     -fx-font-weight: bold;
     -fx-font-style: italic;
+}
+
+.text-area {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
 }

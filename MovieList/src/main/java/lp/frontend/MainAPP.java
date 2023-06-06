@@ -28,7 +28,7 @@ public class MainAPP extends Application {
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
     private final Manager manager = Manager.getInstance();
-    private final TotalSelectedCounter totalSelectedCounter = new TotalSelectedCounter();
+    private final InfoLabel totalSelectedCounter = new InfoLabel();
 
     private BorderPane mainPane;
     private FlowPane menuPane;
@@ -191,6 +191,7 @@ public class MainAPP extends Application {
                 manager.setSelectedButton(null);
                 manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().clear();
                 episodePane.getChildren().clear();
+                totalSelectedCounter.updateCounter(new long[]{0, 0});
             }
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
@@ -218,6 +219,7 @@ public class MainAPP extends Application {
                 newEpisodeCheckBox.setSelected(true);
                 newEpisodeCheckBox.getCheckBox().setSelected(true);
             }
+            newEpisodeCheckBox.setSize(subEpisode.getSize());
             newEpisodeCheckBox.getEpisodeParents().addAll(episodeCheckBox.getEpisodeParents());
             newEpisodeCheckBox.getEpisodeParents().add(episodeCheckBox);
             episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);

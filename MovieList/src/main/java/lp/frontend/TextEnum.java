@@ -45,10 +45,10 @@ public enum TextEnum {
     FILES(" souborů!"),
     NOTES_TITLE("Poznámky"),
     NOTE_SEPARATOR("======================== Inserted noted ======================== "),
-    TOTAL_SELECTED_TEXT_PREFIX("Celkově vybráno: "),
-    TOTAL_SELECTED_TEXT_SUFFIX_FOR_ONE(" položka"),
-    TOTAL_SELECTED_TEXT_SUFFIX_FOR_LOW(" položky"),
-    TOTAL_SELECTED_TEXT_SUFFIX_DEFAULT(" položek");
+    TOTAL_SELECTED_TEXT_PREFIX("Celkově vybráno:"),
+    TOTAL_SELECTED_TEXT_SUFFIX_FOR_ONE("položka"),
+    TOTAL_SELECTED_TEXT_SUFFIX_FOR_LOW("položky"),
+    TOTAL_SELECTED_TEXT_SUFFIX_DEFAULT("položek");
 
     private String text;
 

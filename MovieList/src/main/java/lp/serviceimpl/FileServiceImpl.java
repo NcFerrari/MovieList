@@ -159,6 +159,8 @@ public class FileServiceImpl implements FileService {
                 Episode subEpisode = new Episode(subFileName);
                 if (subFile.isDirectory()) {
                     fillEpisode(subFile, subEpisode);
+                } else {
+                    subEpisode.setSize(subFile.length());
                 }
                 episode.getSubEpisodes().put(subFileName, subEpisode);
             }

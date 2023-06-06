@@ -21,9 +21,10 @@ public class EpisodeCheckBox {
     private double scrollPanePosition;
     private List<EpisodeCheckBox> episodeParents = new ArrayList<>();
     private Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
+    private long size;
     private int[] countOfEpisodes = new int[]{0};
 
-    public void createCheckBox(String title, TotalSelectedCounter totalSelectedCounter) {
+    public void createCheckBox(String title, InfoLabel totalSelectedCounter) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));

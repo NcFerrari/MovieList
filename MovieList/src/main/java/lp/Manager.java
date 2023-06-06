@@ -33,7 +33,8 @@ public class Manager {
     private Episode importedEpisode;
     private Button selectedButton;
     private String noteText = "";
-    private int countOfSelected;
+    private long countOfSelected;
+    private long totalSize;
     private boolean loadedFromFile;
 
     public void startApplication() {
@@ -87,15 +88,17 @@ public class Manager {
         }
     }
 
-    public int getSelectedCount() {
+    public long[] getSelectedCount() {
         countOfSelected = 0;
+        totalSize = 0;
         count(getPreparedEpisodeCheckBoxToExport());
-        return countOfSelected;
+        return new long[]{countOfSelected, totalSize};
     }
 
     private void count(EpisodeCheckBox episodeCheckBox) {
         if (episodeCheckBox.getCheckBox() != null && episodeCheckBox.getCheckBox().isSelected() && episodeCheckBox.getEpisodeCheckBoxes().isEmpty()) {
             countOfSelected++;
+            totalSize += episodeCheckBox.getSize();
         }
         for (EpisodeCheckBox subEpisodeCheckBox : episodeCheckBox.getEpisodeCheckBoxes().values()) {
             count(subEpisodeCheckBox);
