@@ -65,7 +65,7 @@ public class DialogServiceImpl implements DialogService {
         textInputDialog.setTitle(title);
         textInputDialog.setHeaderText(message);
         textInputDialog.getEditor().setText(promptText);
-        Optional<String> input = null;
+        Optional<String> input;
         do {
             input = textInputDialog.showAndWait();
             if (!input.isPresent()) {

@@ -6,8 +6,11 @@ import lp.service.DialogService;
 import lp.service.FileService;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -96,6 +99,32 @@ public class FileServiceImpl implements FileService {
         } catch (IOException exp) {
             dialogService.useErrorDialog(exp);
         }
+    }
+
+    @Override
+    public String getNoteFromJSON(String pathForFile) {
+        File file = new File(pathForFile);
+        if (!file.exists()) {
+            return "";
+        }
+        String note = "";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            boolean record = false;
+            while ((line = br.readLine()) != null) {
+                if (record) {
+                    note += String.format("%s\n", line);
+                } else if (line.equals(TextEnum.NOTE_SEPARATOR.getText())) {
+                    record = true;
+                }
+            }
+        } catch (FileNotFoundException exp) {
+            dialogService.useErrorDialog(exp);
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
+        }
+        return note;
     }
 
     private void copyFiles(String oldPath, String newPath, Episode episode) {

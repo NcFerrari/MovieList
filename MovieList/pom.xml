@@ -6,7 +6,7 @@
 
     <groupId>lp.soft</groupId>
     <artifactId>MovieList</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1T</version>
     <packaging>jar</packaging>
 
     <properties>

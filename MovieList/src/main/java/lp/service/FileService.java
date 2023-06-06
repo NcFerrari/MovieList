@@ -17,4 +17,6 @@ public interface FileService {
     void copyFilesTo(String path, Episode episode);
 
     void addToFile(String pathForFile, String text);
+
+    String getNoteFromJSON(String pathForFile);
 }

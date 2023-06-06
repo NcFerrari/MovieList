@@ -1,10 +1,8 @@
 package lp.frontend;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lp.Manager;
 import lp.business.dto.Episode;
@@ -83,6 +81,7 @@ public class StartingDialog extends Application {
                 if (path != null) {
                     String exportedFilePath = new File(path).getAbsolutePath();
                     manager.setImportedEpisode(fileService.loadJSON(exportedFilePath, Episode.class));
+                    manager.setNoteText(fileService.getNoteFromJSON(exportedFilePath));
                     try {
                         MainAPP.class.newInstance().start(new Stage());
                     } catch (Exception exp) {

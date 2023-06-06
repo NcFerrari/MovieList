@@ -68,6 +68,7 @@ public class MainAPP extends Application {
         Tab tab = new Tab(TextEnum.NOTES_TITLE.getText());
         textArea = new TextArea();
         textArea.setWrapText(true);
+        textArea.setText(manager.getNoteText());
         tab.setContent(textArea);
         tab.setClosable(false);
         areaPane.getTabs().addAll(tab);
