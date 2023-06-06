@@ -168,7 +168,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private boolean excludeFiles(String fileName) {
-        String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO", ".jpg"};
+        String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO", ".jpg", "Politika"};
         for (String exFile : excludedFiles) {
             if (fileName.endsWith(exFile)) {
                 return true;
