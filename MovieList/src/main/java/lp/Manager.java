@@ -33,6 +33,7 @@ public class Manager {
     private Episode importedEpisode;
     private Button selectedButton;
     private String noteText;
+    private int countOfSelected;
 
     public void startApplication() {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
@@ -82,6 +83,21 @@ public class Manager {
     public void copyFilesTo(String path) {
         if (path != null) {
             fileService.copyFilesTo(path, getImportedEpisode());
+        }
+    }
+
+    public int getSelectedCount() {
+        countOfSelected = 0;
+        count(getPreparedEpisodeCheckBoxToExport());
+        return countOfSelected;
+    }
+
+    public void count(EpisodeCheckBox episodeCheckBox) {
+        if (episodeCheckBox.getCheckBox() != null && episodeCheckBox.getCheckBox().isSelected() && episodeCheckBox.getEpisodeCheckBoxes().isEmpty()) {
+            countOfSelected++;
+        }
+        for (EpisodeCheckBox subEpisodeCheckBox : episodeCheckBox.getEpisodeCheckBoxes().values()) {
+            count(subEpisodeCheckBox);
         }
     }
 }

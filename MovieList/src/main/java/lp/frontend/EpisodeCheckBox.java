@@ -6,6 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
 import lombok.Getter;
 import lombok.Setter;
+import lp.Manager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,20 +23,23 @@ public class EpisodeCheckBox {
     private Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
     private int[] countOfEpisodes = new int[]{0};
 
-    public void createCheckBox(String title) {
+    public void createCheckBox(String title, TotalSelectedCounter totalSelectedCounter) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));
         checkBox.setTooltip(checkBoxTooltip);
         checkBox.setOnAction(evt -> {
-            setSelected(checkBox.isSelected());
-            selectOrDeselect(selected, episodeCheckBoxes);
-            checkParentSelection();
+            if (checkBox.getGraphic() == null || (checkBox.getGraphic() != null && !checkBox.getGraphic().isFocused())) {
+                setSelected(checkBox.isSelected());
+                selectOrDeselect(selected, episodeCheckBoxes);
+                setParentSelection();
+                totalSelectedCounter.updateCounter(Manager.getInstance().getSelectedCount());
+            }
         });
         StyleClasses.addStyle(checkBox, StyleClasses.CHECKBOX);
     }
 
-    private void checkParentSelection() {
+    private void setParentSelection() {
         for (int i = episodeParents.size() - 1; i > 0; i--) {
             countOfEpisodes[0] = 0;
             for (EpisodeCheckBox episodeCheckBox : episodeParents.get(i).getEpisodeCheckBoxes().values()) {

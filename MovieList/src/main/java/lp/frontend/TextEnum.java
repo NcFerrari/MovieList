@@ -44,7 +44,9 @@ public enum TextEnum {
     SUCCESS_COPPIED_MESSAGE("Úspěšně dokopírováno "),
     FILES(" souborů!"),
     NOTES_TITLE("Poznámky"),
-    NOTE_SEPARATOR("======================== Inserted noted ======================== ");
+    NOTE_SEPARATOR("======================== Inserted noted ======================== "),
+    TOTAL_SELECTED_TEXT_PREFIX("Celkově vybráno: "),
+    TOTAL_SELECTED_TEXT_SUFFIX(" položek");
 
     private String text;
 

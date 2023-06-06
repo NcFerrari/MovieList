@@ -28,6 +28,7 @@ public class MainAPP extends Application {
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
     private final Manager manager = Manager.getInstance();
+    private final TotalSelectedCounter totalSelectedCounter = new TotalSelectedCounter();
 
     private BorderPane mainPane;
     private FlowPane menuPane;
@@ -142,7 +143,7 @@ public class MainAPP extends Application {
         }
         if (!manager.checkIfEpisodeCheckBoxContainsSelectedButton()) {
             EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
-            episodeCheckBox.createCheckBox(manager.getSelectedButton().getText());
+            episodeCheckBox.createCheckBox(manager.getSelectedButton().getText(), totalSelectedCounter);
             episodeCheckBox = mapEpisodeToEpisodeCheckBox(episodeCheckBox, manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()));
             manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(manager.getSelectedButton().getText(), episodeCheckBox);
         }
@@ -197,12 +198,13 @@ public class MainAPP extends Application {
         });
         footerPane.getChildren().addAll(clearButton, exportButton, copyButton);
         footerPane.getChildren().forEach(node -> StyleClasses.addStyle(node, StyleClasses.MENU_BUTTON));
+        footerPane.getChildren().add(totalSelectedCounter.getLabel());
     }
 
     private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(EpisodeCheckBox episodeCheckBox, Episode episode) {
         episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
             EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
-            newEpisodeCheckBox.createCheckBox(subEpisode.getSubEpisodes().isEmpty() ? subEpisodeTitle.substring(0, subEpisodeTitle.length() - 4) : subEpisodeTitle);
+            newEpisodeCheckBox.createCheckBox(subEpisode.getSubEpisodes().isEmpty() ? subEpisodeTitle.substring(0, subEpisodeTitle.length() - 4) : subEpisodeTitle, totalSelectedCounter);
             if (subEpisode.isSelected()) {
                 newEpisodeCheckBox.setSelected(true);
                 newEpisodeCheckBox.getCheckBox().setSelected(true);
