@@ -82,6 +82,7 @@ public class StartingDialog extends Application {
                     String exportedFilePath = new File(path).getAbsolutePath();
                     manager.setImportedEpisode(fileService.loadJSON(exportedFilePath, Episode.class));
                     manager.setNoteText(fileService.getNoteFromJSON(exportedFilePath));
+                    manager.setLoadedFromFile(true);
                     try {
                         MainAPP.class.newInstance().start(new Stage());
                     } catch (Exception exp) {

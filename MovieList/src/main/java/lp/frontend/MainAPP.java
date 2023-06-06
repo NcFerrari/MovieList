@@ -48,6 +48,14 @@ public class MainAPP extends Application {
         stage.setTitle(TextEnum.APPLICATION_TITLE.getText());
         stage.show();
 
+        if (manager.isLoadedFromFile()) {
+            manager.getImportedEpisode().getSubEpisodes().forEach((categories, episode) -> {
+                EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
+                episodeCheckBox.createCheckBox(categories, totalSelectedCounter);
+                manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(categories, mapEpisodeToEpisodeCheckBox(episodeCheckBox, episode));
+            });
+        }
+
         menuPane = new FlowPane();
         StyleClasses.addStyle(menuPane, StyleClasses.MENU);
         mainPane.setTop(menuPane);
@@ -199,6 +207,7 @@ public class MainAPP extends Application {
         footerPane.getChildren().addAll(clearButton, exportButton, copyButton);
         footerPane.getChildren().forEach(node -> StyleClasses.addStyle(node, StyleClasses.MENU_BUTTON));
         footerPane.getChildren().add(totalSelectedCounter.getLabel());
+        totalSelectedCounter.updateCounter(manager.getSelectedCount());
     }
 
     private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(EpisodeCheckBox episodeCheckBox, Episode episode) {

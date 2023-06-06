@@ -32,8 +32,9 @@ public class Manager {
 
     private Episode importedEpisode;
     private Button selectedButton;
-    private String noteText;
+    private String noteText = "";
     private int countOfSelected;
+    private boolean loadedFromFile;
 
     public void startApplication() {
         if (!fileService.getFile(TextEnum.IMPORT_FILE.getText()).exists()) {
@@ -92,7 +93,7 @@ public class Manager {
         return countOfSelected;
     }
 
-    public void count(EpisodeCheckBox episodeCheckBox) {
+    private void count(EpisodeCheckBox episodeCheckBox) {
         if (episodeCheckBox.getCheckBox() != null && episodeCheckBox.getCheckBox().isSelected() && episodeCheckBox.getEpisodeCheckBoxes().isEmpty()) {
             countOfSelected++;
         }
