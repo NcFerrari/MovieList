@@ -61,7 +61,9 @@ public class FileServiceImpl implements FileService {
     public void copyFilesTo(String newPath, Episode episode) {
         File newFilesDir = new File(newPath);
         if (!newFilesDir.exists()) {
-            String answer = dialogService.useConfirmDialog(TextEnum.DIR_NOT_EXISTS_TITLE.getText(), TextEnum.DIR_NOT_EXISTS_MESSAGE.getText());
+            String answer = dialogService.useConfirmDialog(
+                    TextEnum.DIR_NOT_EXISTS_TITLE.getText(),
+                    TextEnum.DIR_NOT_EXISTS_MESSAGE.getText());
             if (TextEnum.NO_TEXT.getText().equals(answer)) {
                 return;
             }
@@ -171,7 +173,9 @@ public class FileServiceImpl implements FileService {
                 copyFiles(oldPath + "/" + subEpisode.getTitle(), newPath + "/" + subEpisode.getTitle(), subEpisode);
             }
         });
-        dialogService.useInformationDialog(TextEnum.SUCCESS_COPPIED_TITLE.getText(), TextEnum.SUCCESS_COPPIED_MESSAGE.getText() + counter[0] + TextEnum.FILES.getText());
+        dialogService.useInformationDialog(
+                TextEnum.SUCCESS_COPPIED_TITLE.getText(),
+                TextEnum.SUCCESS_COPPIED_MESSAGE.getText() + counter[0] + TextEnum.FILES.getText());
     }
 
     private void fillEpisode(File file, Episode episode) {
@@ -233,7 +237,10 @@ public class FileServiceImpl implements FileService {
 
     private void loadExcludedFile() {
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(TextEnum.EXCLUDED_FILES_FILE_NAME.getText())), StandardCharsets.UTF_8))) {
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(Objects.requireNonNull(
+                        getClass().getClassLoader().getResourceAsStream(
+                                TextEnum.EXCLUDED_FILES_FILE_NAME.getText())), StandardCharsets.UTF_8))) {
             String fileLine;
             while ((fileLine = bufferedReader.readLine()) != null) {
                 stringBuilder.append(fileLine).append(TextEnum.SEPARATOR.getText());
