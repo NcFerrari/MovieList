@@ -15,6 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class FileServiceImpl implements FileService {
 
@@ -151,7 +155,8 @@ public class FileServiceImpl implements FileService {
 
     private void fillEpisode(File file, Episode episode) {
         if (file.isDirectory()) {
-            for (File subFile : file.listFiles()) {
+            for (File subFile : sortArray(file.listFiles())) {
+                System.out.println(subFile);
                 if (excludeFiles(subFile.getName())) {
                     continue;
                 }
@@ -165,6 +170,42 @@ public class FileServiceImpl implements FileService {
                 episode.getSubEpisodes().put(subFileName, subEpisode);
             }
         }
+    }
+
+    private File[] sortArray(File[] files) {
+        File[] resultArray = new File[files.length];
+        boolean setToResultArray = true;
+        Map<Integer, List<File>> integerFirstLetterMap = new TreeMap<>();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].getName().substring(0, 1).matches("[0-9]")) {
+                String stringNumber = "";
+                for (String letter : files[i].getName().split("")) {
+                    if (letter.matches("[0-9]")) {
+                        stringNumber += letter;
+                    } else {
+                        break;
+                    }
+                }
+                if (!integerFirstLetterMap.containsKey(Integer.parseInt(stringNumber))) {
+                    integerFirstLetterMap.put(Integer.parseInt(stringNumber), new ArrayList<>());
+                }
+                integerFirstLetterMap.get(Integer.parseInt(stringNumber)).add(files[i]);
+                if (i < files.length - 1) {
+                    continue;
+                }
+            }
+            if (setToResultArray) {
+                int j = 0;
+                for (List<File> fileList : integerFirstLetterMap.values()) {
+                    for (File file : fileList) {
+                        resultArray[j++] = file;
+                    }
+                }
+                setToResultArray = false;
+            }
+            resultArray[i] = files[i];
+        }
+        return resultArray;
     }
 
     private boolean excludeFiles(String fileName) {
