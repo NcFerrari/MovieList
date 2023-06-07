@@ -12,13 +12,8 @@ import java.util.Optional;
 
 public class DialogServiceImpl implements DialogService {
 
+    //=======================SINGLETON=========================
     private static DialogServiceImpl dialogService;
-    private Alert dialog;
-
-
-    private DialogServiceImpl() {
-
-    }
 
     public static DialogServiceImpl getInstance() {
         if (dialogService == null) {
@@ -27,19 +22,23 @@ public class DialogServiceImpl implements DialogService {
         return dialogService;
     }
 
+    private DialogServiceImpl() {
+
+    }
+    //=======================SINGLETON=========================
+
+
+    //=======================ATTRIBUTES========================
+    private Alert dialog;
+    //=======================ATTRIBUTES========================
+
+
+    //=======================METHODS===========================
     @Override
     public void initTextInputDialog(String title, String message) {
         StartingDialog.setTitle(title);
         StartingDialog.setMessage(message);
         javafx.application.Application.launch(StartingDialog.class);
-    }
-
-    @Override
-    public String useConfirmDialog(String title, String message) {
-        setDialog(Alert.AlertType.CONFIRMATION, title, message);
-        dialog.getButtonTypes().clear();
-        dialog.getButtonTypes().addAll(new ButtonType(TextEnum.YES_TEXT.getText()), new ButtonType(TextEnum.NO_TEXT.getText()));
-        return dialog.showAndWait().get().getText();
     }
 
     @Override
@@ -51,13 +50,27 @@ public class DialogServiceImpl implements DialogService {
     @Override
     public void useErrorDialog(Exception exp) {
         exp.printStackTrace();
-        String fullStackTrace = exp + "\n\n";
+        StringBuilder stringBuilder = new StringBuilder(exp + "\n\n");
         for (StackTraceElement stackTraceElement : exp.getStackTrace()) {
-            fullStackTrace += stackTraceElement + "\n";
+            stringBuilder.append(stackTraceElement).append("\n");
         }
         setDialog(Alert.AlertType.ERROR, TextEnum.ERROR_TITLE.getText(), TextEnum.ERROR_MESSAGE.getText());
-        dialog.getDialogPane().setContent(new TextArea(fullStackTrace));
+        dialog.getDialogPane().setContent(new TextArea(stringBuilder.toString()));
         dialog.showAndWait();
+    }
+    //=======================METHODS===========================
+
+
+    //=======================RETURN METHODS====================
+    @Override
+    public String useConfirmDialog(String title, String message) {
+        setDialog(Alert.AlertType.CONFIRMATION, title, message);
+        dialog.getButtonTypes().clear();
+        dialog.getButtonTypes().addAll(
+                new ButtonType(TextEnum.YES_TEXT.getText()),
+                new ButtonType(TextEnum.NO_TEXT.getText()));
+        Optional<ButtonType> result = dialog.showAndWait();
+        return result.map(ButtonType::getText).orElse(null);
     }
 
     @Override
@@ -69,13 +82,16 @@ public class DialogServiceImpl implements DialogService {
         Optional<String> input;
         do {
             input = textInputDialog.showAndWait();
-            if (!input.isPresent()) {
+            if (input.isEmpty()) {
                 return null;
             }
         } while (textInputDialog.getEditor().getText().isEmpty());
         return input.get();
     }
+    //=======================RETURN METHODS====================
 
+
+    //=======================PRIVATE METHODS===================
     private void setDialog(Alert.AlertType type, String title, String message) {
         if (dialog == null) {
             dialog = new Alert(type);
@@ -86,4 +102,5 @@ public class DialogServiceImpl implements DialogService {
         dialog.setTitle(title);
         dialog.setHeaderText(message);
     }
+    //=======================PRIVATE METHODS===================
 }

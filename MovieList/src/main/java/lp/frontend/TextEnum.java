@@ -15,7 +15,11 @@ public enum TextEnum {
     ADDITIONAL_TEXT_EMPTY_STRING("\n\nPRÁZDNÝ ŘETĚZEC!"),
     ADDITIONAL_TEXT_FILE_NOT_FOUND("\n\nADRESÁŘ NEEXISTUJE!"),
     APPLICATION_TITLE("Seznam filmů"),
-    RESOURCES("/css/fx-component.css"),
+    CSS_CHECK_BOXES("/css/fx-check-boxes.css"),
+    CSS_MAIN_PANE("/css/fx-main-pane.css"),
+    CSS_MENU("/css/fx-menu.css"),
+    CSS_TAB_PANE("/css/fx-tab-pane.css"),
+    CSS_TEXT_AREA("/css/fx-text-area.css"),
     OPENED_SUB_LIST("v"),
     CLOSED_SUB_LIST(">"),
     CLEAR_SELECTED_BUTTON_TEXT("Reset vybranných položek"),
@@ -48,7 +52,11 @@ public enum TextEnum {
     TOTAL_SELECTED_TEXT_PREFIX("Celkově vybráno:"),
     TOTAL_SELECTED_TEXT_SUFFIX_FOR_ONE("položka"),
     TOTAL_SELECTED_TEXT_SUFFIX_FOR_LOW("položky"),
-    TOTAL_SELECTED_TEXT_SUFFIX_DEFAULT("položek");
+    TOTAL_SELECTED_TEXT_SUFFIX_DEFAULT("položek"),
+    SEPARATOR("/"),
+    EXCLUDED_FILES_FILE_NAME("excluded_files.exc"),
+    DIR_NOT_CREATED("Directory not created"),
+    DIRS_NOT_CREATED("Directories not created");
 
     private String text;
 

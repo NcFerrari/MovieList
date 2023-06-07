@@ -44,7 +44,11 @@ public class MainAPP extends Application {
         StyleClasses.addStyle(mainPane, StyleClasses.PANE);
         Scene scene = new Scene(mainPane, Toolkit.getDefaultToolkit().getScreenSize().width / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource(TextEnum.RESOURCES.getText()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_CHECK_BOXES.getText()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_MAIN_PANE.getText()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_MENU.getText()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_TAB_PANE.getText()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_TEXT_AREA.getText()).toExternalForm());
         stage.setTitle(TextEnum.APPLICATION_TITLE.getText());
         stage.show();
 
@@ -169,9 +173,6 @@ public class MainAPP extends Application {
 
     private void addToEpisodePane(VBox episodePane, EpisodeCheckBox episodeCheckBox) {
         episodePane.getChildren().add(episodeCheckBox.getCheckBox());
-        if (episodeCheckBox.isSelected()) {
-            StyleClasses.addStyle(episodeCheckBox.getCheckBox(), StyleClasses.SELECTED);
-        }
         if (!episodeCheckBox.getEpisodeCheckBoxes().isEmpty() && ((ToggleButton) episodeCheckBox.getCheckBox().getGraphic()).isSelected()) {
             episodeCheckBox.getEpisodeCheckBoxes().values().forEach(subEpisodeCheckBox -> addToEpisodePane(episodePane, subEpisodeCheckBox));
         }

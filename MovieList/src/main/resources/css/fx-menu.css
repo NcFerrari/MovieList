@@ -1,0 +1,39 @@
+.menu {
+    -fx-background-color: #ec791a;
+    -fx-border-color: purple;
+    -fx-background-radius: 15;
+}
+
+.menu-button {
+    -fx-background-color: #81abff;
+    -fx-padding: 10px;
+    -fx-border-insets: 10px;
+    -fx-background-insets: 10px;
+    -fx-min-width: 200px;
+    -fx-border-color: orange;
+    -fx-border-width: 0 0 3px 0;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(three-pass-box, gray, 0, 0, 3, 3);
+    -fx-font-size: 20px;
+    -fx-font-family: Verdana;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.menu-button:hover, .selected {
+    -fx-background-color: rgba(128, 0, 128, 0.42);
+    -fx-text-fill: #dca577;
+    -fx-cursor: hand;
+}
+
+.menu-button:pressed {
+    -fx-background-color: rgba(128, 0, 128, 1);
+}
+
+.label {
+    -fx-font-size: 20px;
+    -fx-font-family: Verdana;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}

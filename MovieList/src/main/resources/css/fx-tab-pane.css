@@ -1,0 +1,10 @@
+.tab {
+    -fx-background-color: #9c20cb;
+    -fx-padding: 5px;
+}
+
+.tab .tab-label {
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}

@@ -1,0 +1,43 @@
+.checkbox {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: black;
+    -fx-border-color: red;
+    -fx-border-width: 3px;
+    -fx-font-size: 35px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-content-display: left;
+}
+
+.checkbox:hover {
+    -fx-background-color: #9c20cb;
+    -fx-cursor: HAND;
+    -fx-background-radius: 15px;
+}
+
+.checkbox:selected:hover {
+    -fx-background-color: #9c20cb;
+    -fx-cursor: HAND;
+    -fx-background-radius: 15px;
+}
+
+.checkbox:selected {
+    -fx-background-color: #ec791a;
+}
+
+.checkbox:selected .mark {
+    -fx-background-color: #9c20cb;
+}
+
+.checkbox .box {
+    -fx-background-radius: 15px;
+}
+
+.checkbox .tooltip {
+    -fx-background-color: rgb(233, 238, 19);
+    -fx-border-color: red;
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+}

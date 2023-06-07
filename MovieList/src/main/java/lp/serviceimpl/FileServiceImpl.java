@@ -9,22 +9,22 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class FileServiceImpl implements FileService {
 
-    private final static DialogService dialogService = DialogServiceImpl.getInstance();
-    private final int[] counter = new int[]{0};
-
+    //=======================SINGLETON=========================
     private static FileServiceImpl fileService;
 
     public static FileServiceImpl getInstance() {
@@ -34,7 +34,19 @@ public class FileServiceImpl implements FileService {
         return fileService;
     }
 
+    private FileServiceImpl() {
+    }
+    //=======================SINGLETON=========================
 
+
+    //=======================ATTRIBUTES========================
+    private static final DialogService dialogService = DialogServiceImpl.getInstance();
+    private final int[] counter = new int[]{0};
+    private String[] excludedFiles;
+    //=======================ATTRIBUTES========================
+
+
+    //=======================METHODS===========================
     @Override
     public void writeDataToJSON(String pathForJSON, Episode episode) {
         try {
@@ -46,12 +58,50 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void copyFilesTo(String newPath, Episode episode) {
+        File newFilesDir = new File(newPath);
+        if (!newFilesDir.exists()) {
+            String answer = dialogService.useConfirmDialog(TextEnum.DIR_NOT_EXISTS_TITLE.getText(), TextEnum.DIR_NOT_EXISTS_MESSAGE.getText());
+            if (TextEnum.NO_TEXT.getText().equals(answer)) {
+                return;
+            }
+            boolean wasSuccessful = newFilesDir.mkdir();
+            if (!wasSuccessful) {
+                dialogService.useErrorDialog(new Exception(TextEnum.DIR_NOT_CREATED.getText()));
+            }
+        }
+        counter[0] = 0;
+        String oldPath = episode.getTitle();
+        copyFiles(oldPath, newPath, episode);
+    }
+
+    @Override
+    public void addToFile(String pathForFile, String text) {
+        File file = new File(pathForFile);
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            bufferedWriter.newLine();
+            bufferedWriter.write(TextEnum.NOTE_SEPARATOR.getText());
+            bufferedWriter.newLine();
+            bufferedWriter.write(text);
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
+        }
+    }
+    //=======================METHODS===========================
+
+
+    //=======================RETURN METHODS====================
+    @Override
     public Episode getEpisodeObjectFromFileSystem(String pathOfFiles) {
         File rootFile = new File(pathOfFiles);
         if (!rootFile.exists()) {
             return null;
         }
         Episode episode = new Episode(rootFile.getAbsolutePath());
+        loadExcludedFile();
         fillEpisode(rootFile, episode);
         return episode;
     }
@@ -74,71 +124,42 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void copyFilesTo(String newPath, Episode episode) {
-        File newFilesDir = new File(newPath);
-        if (!newFilesDir.exists()) {
-            if (TextEnum.NO_TEXT.getText().equals(dialogService.useConfirmDialog(TextEnum.DIR_NOT_EXISTS_TITLE.getText(), TextEnum.DIR_NOT_EXISTS_MESSAGE.getText()))) {
-                return;
-            }
-            newFilesDir.mkdir();
-        }
-        counter[0] = 0;
-        String oldPath = episode.getTitle();
-        copyFiles(oldPath, newPath, episode);
-    }
-
-    @Override
-    public void addToFile(String pathForFile, String text) {
-        File file = new File(pathForFile);
-        if (!file.exists()) {
-            return;
-        }
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-            bw.newLine();
-            bw.write(TextEnum.NOTE_SEPARATOR.getText());
-            bw.newLine();
-            bw.write(text);
-            bw.close();
-        } catch (IOException exp) {
-            dialogService.useErrorDialog(exp);
-        }
-    }
-
-    @Override
     public String getNoteFromJSON(String pathForFile) {
         File file = new File(pathForFile);
         if (!file.exists()) {
             return "";
         }
-        String note = "";
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            boolean record = false;
-            while ((line = br.readLine()) != null) {
-                if (record) {
-                    note += String.format("%s\n", line);
-                } else if (line.equals(TextEnum.NOTE_SEPARATOR.getText())) {
-                    record = true;
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String fileLine;
+            boolean noteIndex = false;
+            while ((fileLine = bufferedReader.readLine()) != null) {
+                if (noteIndex) {
+                    stringBuilder.append(fileLine).append("\n");
+                } else if (fileLine.equals(TextEnum.NOTE_SEPARATOR.getText())) {
+                    noteIndex = true;
                 }
             }
-        } catch (FileNotFoundException exp) {
-            dialogService.useErrorDialog(exp);
         } catch (IOException exp) {
             dialogService.useErrorDialog(exp);
         }
-        return note;
+        return stringBuilder.toString();
     }
+    //=======================RETURN METHODS====================
 
+
+    //=======================PRIVATE METHODS===================
     private void copyFiles(String oldPath, String newPath, Episode episode) {
         episode.getSubEpisodes().values().forEach(subEpisode -> {
             if (subEpisode.isSelected() && subEpisode.getSubEpisodes().isEmpty()) {
-                File sourceFile = new File(oldPath + "/" + subEpisode.getTitle());
-                File targetFile = new File(newPath + "/" + subEpisode.getTitle());
+                File sourceFile = new File(oldPath + TextEnum.SEPARATOR.getText() + subEpisode.getTitle());
+                File targetFile = new File(newPath + TextEnum.SEPARATOR.getText() + subEpisode.getTitle());
                 try {
                     if (!targetFile.exists()) {
-                        targetFile.getParentFile().mkdirs();
+                        boolean wasSuccessful = targetFile.getParentFile().mkdirs();
+                        if (!wasSuccessful) {
+                            dialogService.useErrorDialog(new Exception(TextEnum.DIRS_NOT_CREATED.getText()));
+                        }
                         Files.copy(sourceFile.toPath(), targetFile.toPath());
                         counter[0]++;
                     }
@@ -155,8 +176,8 @@ public class FileServiceImpl implements FileService {
 
     private void fillEpisode(File file, Episode episode) {
         if (file.isDirectory()) {
-            for (File subFile : sortArray(file.listFiles())) {
-                System.out.println(subFile);
+            File[] sortedFiles = sortingArrayWithNumericOrder(Objects.requireNonNull(file.listFiles()));
+            for (File subFile : sortedFiles) {
                 if (excludeFiles(subFile.getName())) {
                     continue;
                 }
@@ -172,44 +193,59 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private File[] sortArray(File[] files) {
-        File[] resultArray = new File[files.length];
-        boolean setToResultArray = true;
+    /**
+     * Count that array is alphabetic sorted
+     * This method just make text started with number to be numerical sorted
+     *
+     * @param files is alphabetic sorted array
+     */
+    private File[] sortingArrayWithNumericOrder(File[] files) {
+
         Map<Integer, List<File>> integerFirstLetterMap = new TreeMap<>();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].getName().substring(0, 1).matches("[0-9]")) {
-                String stringNumber = "";
-                for (String letter : files[i].getName().split("")) {
-                    if (letter.matches("[0-9]")) {
-                        stringNumber += letter;
-                    } else {
-                        break;
-                    }
-                }
-                if (!integerFirstLetterMap.containsKey(Integer.parseInt(stringNumber))) {
-                    integerFirstLetterMap.put(Integer.parseInt(stringNumber), new ArrayList<>());
-                }
-                integerFirstLetterMap.get(Integer.parseInt(stringNumber)).add(files[i]);
-                if (i < files.length - 1) {
-                    continue;
-                }
+        for (File file : files) {
+            if (file.getName().substring(0, 1).matches("\\d")) {
+                int key = getIntegerKey(file.getName().split(""));
+                integerFirstLetterMap.putIfAbsent(key, new ArrayList<>());
+                integerFirstLetterMap.get(key).add(file);
             }
-            if (setToResultArray) {
-                int j = 0;
-                for (List<File> fileList : integerFirstLetterMap.values()) {
-                    for (File file : fileList) {
-                        resultArray[j++] = file;
-                    }
-                }
-                setToResultArray = false;
-            }
-            resultArray[i] = files[i];
         }
-        return resultArray;
+
+        int j = 0;
+        for (List<File> fileList : integerFirstLetterMap.values()) {
+            for (File file : fileList) {
+                files[j++] = file;
+            }
+        }
+        return files;
+    }
+
+    private Integer getIntegerKey(String[] splitName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String letter : splitName) {
+            if (letter.matches("\\d")) {
+                stringBuilder.append(letter);
+            } else {
+                break;
+            }
+        }
+        return Integer.parseInt(stringBuilder.toString());
+    }
+
+    private void loadExcludedFile() {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(TextEnum.EXCLUDED_FILES_FILE_NAME.getText())), StandardCharsets.UTF_8))) {
+            String fileLine;
+            while ((fileLine = bufferedReader.readLine()) != null) {
+                stringBuilder.append(fileLine).append(TextEnum.SEPARATOR.getText());
+            }
+            stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
+        }
+        excludedFiles = stringBuilder.toString().split(TextEnum.SEPARATOR.getText());
     }
 
     private boolean excludeFiles(String fileName) {
-        String[] excludedFiles = new String[]{"$RECYCLE.BIN", "System Volume Information", "TODO", ".jpg", "Politika", ".ini", ".txt"};
         for (String exFile : excludedFiles) {
             if (fileName.endsWith(exFile)) {
                 return true;
@@ -217,4 +253,5 @@ public class FileServiceImpl implements FileService {
         }
         return false;
     }
+    //=======================PRIVATE METHODS===================
 }
