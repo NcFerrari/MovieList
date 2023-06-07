@@ -1,15 +1,17 @@
 package lp.frontend;
 
 import javafx.scene.control.Label;
+import lombok.Getter;
 
+@Getter
 public class InfoLabel {
 
+    //=======================ATTRIBUTES========================
     private final Label label = new Label();
+    //=======================ATTRIBUTES========================
 
-    public Label getLabel() {
-        return label;
-    }
 
+    //=======================METHODS===========================
     public void updateCounter(long[] counterAndSize) {
         String inflectionText = "";
         switch ((int) counterAndSize[0]) {
@@ -26,19 +28,23 @@ public class InfoLabel {
         }
         label.setText(String.format("%s %s %s (%s)", TextEnum.TOTAL_SELECTED_TEXT_PREFIX.getText(), counterAndSize[0], inflectionText, unitConversion(counterAndSize[1])));
     }
+    //=======================METHODS===========================
 
+
+    //=======================RETURN METHODS====================
+    //=======================RETURN METHODS====================
+
+
+    //=======================PRIVATE METHODS===================
     private String unitConversion(double byteSize) {
         double result = byteSize;
         int numberOfDividing = 0;
         while (result > 1024) {
             numberOfDividing++;
-            result = result / (double) 1024;
+            result = result / 1024;
         }
         String unit = "";
         switch (numberOfDividing) {
-            case 0:
-                unit = "B";
-                break;
             case 1:
                 unit = "KB";
                 break;
@@ -50,8 +56,12 @@ public class InfoLabel {
                 break;
             case 4:
                 unit = "TB";
+                break;
+            default:
+                unit = "B";
         }
         return String.format("%.2f %s", result, unit);
     }
+    //=======================PRIVATE METHODS===================
 
 }

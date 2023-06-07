@@ -88,6 +88,14 @@ public class DialogServiceImpl implements DialogService {
         } while (textInputDialog.getEditor().getText().isEmpty());
         return input.get();
     }
+
+    @Override
+    public Alert useDialog(String title, String message, Alert.AlertType type) {
+        setDialog(type, title, message);
+        dialog.show();
+        return dialog;
+    }
+
     //=======================RETURN METHODS====================
 
 

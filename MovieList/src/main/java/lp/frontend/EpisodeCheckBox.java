@@ -16,21 +16,28 @@ import java.util.Map;
 @Getter
 @Setter
 public class EpisodeCheckBox {
+
+    //=======================ATTRIBUTES========================
+    private final List<EpisodeCheckBox> episodeParents = new ArrayList<>();
+    private final Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
+    private int[] countOfEpisodes = new int[]{0};
+
     private CheckBox checkBox;
     private boolean selected;
     private double scrollPanePosition;
-    private List<EpisodeCheckBox> episodeParents = new ArrayList<>();
-    private Map<String, EpisodeCheckBox> episodeCheckBoxes = new LinkedHashMap<>();
     private long size;
-    private int[] countOfEpisodes = new int[]{0};
+    //=======================ATTRIBUTES========================
 
+
+    //=======================METHODS===========================
     public void createCheckBox(String title, InfoLabel totalSelectedCounter) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));
         checkBox.setTooltip(checkBoxTooltip);
         checkBox.setOnAction(evt -> {
-            if (checkBox.getGraphic() == null || (checkBox.getGraphic() != null && !checkBox.getGraphic().isFocused())) {
+            if (checkBox.getGraphic() == null ||
+                    (checkBox.getGraphic() != null && !checkBox.getGraphic().isFocused())) {
                 setSelected(checkBox.isSelected());
                 selectOrDeselect(selected, episodeCheckBoxes);
                 setParentSelection();
@@ -40,6 +47,17 @@ public class EpisodeCheckBox {
         StyleClasses.addStyle(checkBox, StyleClasses.CHECKBOX);
     }
 
+    public void addToggleButton(ToggleButton toggleButton) {
+        checkBox.setGraphic(toggleButton);
+    }
+    //=======================METHODS===========================
+
+
+    //=======================RETURN METHODS====================
+    //=======================RETURN METHODS====================
+
+
+    //=======================PRIVATE METHODS===================
     private void setParentSelection() {
         for (int i = episodeParents.size() - 1; i > 0; i--) {
             countOfEpisodes[0] = 0;
@@ -69,8 +87,5 @@ public class EpisodeCheckBox {
             }
         });
     }
-
-    public void addToggleButton(ToggleButton toggleButton) {
-        checkBox.setGraphic(toggleButton);
-    }
+    //=======================PRIVATE METHODS===================
 }

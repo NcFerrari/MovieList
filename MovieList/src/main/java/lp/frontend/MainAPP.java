@@ -24,6 +24,20 @@ import lp.serviceimpl.DialogServiceImpl;
 import java.awt.Toolkit;
 
 public class MainAPP extends Application {
+    //=======================ATTRIBUTES========================
+    //=======================ATTRIBUTES========================
+
+
+    //=======================METHODS===========================
+    //=======================METHODS===========================
+
+
+    //=======================RETURN METHODS====================
+    //=======================RETURN METHODS====================
+
+
+    //=======================PRIVATE METHODS===================
+    //=======================PRIVATE METHODS===================
 
     private final DialogService dialogService = DialogServiceImpl.getInstance();
 
