@@ -69,12 +69,15 @@ public class FileServiceImpl implements FileService {
             }
             boolean wasSuccessful = newFilesDir.mkdir();
             if (!wasSuccessful) {
-                dialogService.useErrorDialog(new Exception(TextEnum.DIR_NOT_CREATED.getText()));
+                dialogService.useErrorDialog(new Exception(TextEnum.DIR_CREATING_PROBLEM.getText()));
             }
         }
         counter[0] = 0;
         String oldPath = episode.getTitle();
-        copyFiles(oldPath, newPath, episode);
+        copyFiles(oldPath + TextEnum.SEPARATOR.getText(), newPath + TextEnum.SEPARATOR.getText(), episode);
+        dialogService.useInformationDialog(
+                TextEnum.SUCCESS_COPPIED_TITLE.getText(),
+                TextEnum.SUCCESS_COPPIED_MESSAGE.getText() + counter[0] + TextEnum.FILES.getText());
     }
 
     @Override
@@ -153,31 +156,38 @@ public class FileServiceImpl implements FileService {
 
 
     //=======================PRIVATE METHODS===================
-    private void copyFiles(String oldPath, String newPath, Episode episode) {
+    private void copyFiles(String sourcePath, String targetPath, Episode episode) {
         episode.getSubEpisodes().values().forEach(subEpisode -> {
-            if (subEpisode.isSelected() && subEpisode.getSubEpisodes().isEmpty()) {
-                File sourceFile = new File(oldPath + TextEnum.SEPARATOR.getText() + subEpisode.getTitle());
-                File targetFile = new File(newPath + TextEnum.SEPARATOR.getText() + subEpisode.getTitle());
-                try {
-                    if (!targetFile.exists()) {
-                        boolean wasSuccessful = targetFile.getParentFile().mkdirs();
-                        if (!wasSuccessful) {
-                            dialogService.useErrorDialog(new Exception(TextEnum.DIRS_NOT_CREATED.getText()));
-                        }
-                        Files.copy(sourceFile.toPath(), targetFile.toPath());
-                        counter[0]++;
-                    }
-                } catch (IOException exp) {
-                    dialogService.useErrorDialog(exp);
+            if (subEpisode.getSubEpisodes().isEmpty()) {
+                if (subEpisode.isSelected()) {
+                    copyFile(sourcePath, targetPath, subEpisode);
                 }
-            }
-            if (!subEpisode.getSubEpisodes().isEmpty()) {
-                copyFiles(oldPath + "/" + subEpisode.getTitle(), newPath + "/" + subEpisode.getTitle(), subEpisode);
+            } else {
+                copyFiles(sourcePath + subEpisode.getTitle() + TextEnum.SEPARATOR.getText(),
+                        targetPath + subEpisode.getTitle() + TextEnum.SEPARATOR.getText(),
+                        subEpisode);
             }
         });
-        dialogService.useInformationDialog(
-                TextEnum.SUCCESS_COPPIED_TITLE.getText(),
-                TextEnum.SUCCESS_COPPIED_MESSAGE.getText() + counter[0] + TextEnum.FILES.getText());
+    }
+
+    private void copyFile(String sourcePath, String targetPath, Episode subEpisode) {
+        File sourceFile = new File(sourcePath + subEpisode.getTitle());
+        File targetFile = new File(targetPath + subEpisode.getTitle());
+        if (!targetFile.getParentFile().exists()) {
+            boolean wasSuccessful = targetFile.getParentFile().mkdirs();
+            if (!wasSuccessful) {
+                dialogService.useErrorDialog(new Exception(TextEnum.DIRS_CREATING_PROBLEM.getText()));
+                return;
+            }
+        }
+        try {
+            if (!targetFile.exists()) {
+                Files.copy(sourceFile.toPath(), targetFile.toPath());
+                counter[0]++;
+            }
+        } catch (IOException exp) {
+            dialogService.useErrorDialog(exp);
+        }
     }
 
     private void fillEpisode(File file, Episode episode) {

@@ -44,7 +44,7 @@ public class DialogServiceImpl implements DialogService {
     @Override
     public void useInformationDialog(String title, String message) {
         setDialog(Alert.AlertType.INFORMATION, title, message);
-        dialog.show();
+        dialog.showAndWait();
     }
 
     @Override
@@ -101,9 +101,7 @@ public class DialogServiceImpl implements DialogService {
 
     //=======================PRIVATE METHODS===================
     private void setDialog(Alert.AlertType type, String title, String message) {
-        if (dialog == null) {
-            dialog = new Alert(type);
-        }
+        dialog = new Alert(type);
         dialog.getButtonTypes().clear();
         dialog.getButtonTypes().addAll(new ButtonType(TextEnum.OK_TEXT.getText()));
         dialog.setAlertType(type);
