@@ -57,7 +57,12 @@ public enum TextEnum {
     SEPARATOR("/"),
     EXCLUDED_FILES_FILE_NAME("excluded_files.exc"),
     DIR_NOT_CREATED("Directory not created"),
-    DIRS_NOT_CREATED("Directories not created");
+    DIRS_NOT_CREATED("Directories not created"),
+    BYTE("B"),
+    KILO_BYTE("KB"),
+    MEGA_BYTE("MB"),
+    GIGA_BYTE("GB"),
+    TERA_BYTE("TB");
 
     private final String text;
 
