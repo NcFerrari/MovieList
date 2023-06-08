@@ -82,7 +82,10 @@ public class StartingDialog extends Application {
         String answer;
         String nextProblem = "";
         do {
-            answer = dialogService.useTextInputDialog(getTitle(), getMessage() + nextProblem, TextEnum.DEFAULT_ROOT_PATH.getText());
+            answer = dialogService.useTextInputDialog(
+                    getTitle(),
+                    getMessage() + nextProblem,
+                    TextEnum.DEFAULT_ROOT_PATH.getText());
             if (answer == null) {
                 nextProblem = TextEnum.ADDITIONAL_TEXT_EMPTY_STRING.getText();
             } else if (!new File(answer).exists()) {
@@ -97,12 +100,15 @@ public class StartingDialog extends Application {
     }
 
     private void loadJSONFile() {
-        String path = dialogService.useTextInputDialog(TextEnum.LOAD_FILE_TITLE.getText(), TextEnum.LOAD_FILE_MESSAGE.getText(), TextEnum.EXPORT_FILE.getText() + TextEnum.EXPORT_FILE_SUFFIX.getText());
+        String path = dialogService.useTextInputDialog(
+                TextEnum.LOAD_FILE_TITLE.getText(),
+                TextEnum.LOAD_FILE_MESSAGE.getText(),
+                TextEnum.EXPORT_FILE.getText() + TextEnum.EXPORT_FILE_SUFFIX.getText());
         if (path != null) {
             String exportedFilePath = new File(path).getAbsolutePath();
             manager.setImportedEpisode(fileService.loadJSON(exportedFilePath, Episode.class));
             manager.setNoteText(fileService.getNoteFromJSON(exportedFilePath));
-            manager.setLoadedFromFile(true);
+            manager.loadData();
             runMainApplication();
         }
     }

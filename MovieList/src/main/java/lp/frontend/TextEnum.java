@@ -8,7 +8,8 @@ public enum TextEnum {
     IMPORT_FILE("IMPORT.json"),
     EXPORT_FILE("EXPORTED"),
     EXPORT_FILE_SUFFIX(".json"),
-    DEFAULT_ROOT_PATH("C://Users//lpesek//Music"),
+//    DEFAULT_ROOT_PATH("C://Users/lpesek/Music"),
+    DEFAULT_ROOT_PATH("C://Users/lpesek/Desktop/test"),
     DIRECTORY_FOR_COPY_FILES("C://Users/lpesek/Desktop/exported"),
     FILE_PATH_TITLE("Zadejte soubor"),
     FILE_PATH_MESSAGE("Zadejte cestu, k adresáři, od kterého se mají načíst rekurzivně soubory"),
@@ -20,8 +21,8 @@ public enum TextEnum {
     CSS_MENU("/css/fx-menu.css"),
     CSS_TAB_PANE("/css/fx-tab-pane.css"),
     CSS_TEXT_AREA("/css/fx-text-area.css"),
-    OPENED_SUB_LIST("v"),
-    CLOSED_SUB_LIST(">"),
+    OPENED_SYMBOL_FOR_TOGGLE_BUTTON("v"),
+    CLOSED_SYMBOL_FOR_TOGGLE_BUTTON(">"),
     CLEAR_SELECTED_BUTTON_TEXT("Reset vybranných položek"),
     EXPORT_ITEMS("Vygenerovat soubor vybranných položek"),
     COPY_FILES("Zkopíruj vybrané položky"),
@@ -58,7 +59,7 @@ public enum TextEnum {
     DIR_NOT_CREATED("Directory not created"),
     DIRS_NOT_CREATED("Directories not created");
 
-    private String text;
+    private final String text;
 
     TextEnum(String text) {
         this.text = text;

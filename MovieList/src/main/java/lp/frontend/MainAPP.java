@@ -17,32 +17,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lp.Manager;
-import lp.business.dto.Episode;
 import lp.service.DialogService;
 import lp.serviceimpl.DialogServiceImpl;
 
 import java.awt.Toolkit;
+import java.util.Objects;
 
 public class MainAPP extends Application {
     //=======================ATTRIBUTES========================
-    //=======================ATTRIBUTES========================
-
-
-    //=======================METHODS===========================
-    //=======================METHODS===========================
-
-
-    //=======================RETURN METHODS====================
-    //=======================RETURN METHODS====================
-
-
-    //=======================PRIVATE METHODS===================
-    //=======================PRIVATE METHODS===================
-
     private final DialogService dialogService = DialogServiceImpl.getInstance();
-
     private final Manager manager = Manager.getInstance();
-    private final InfoLabel totalSelectedCounter = new InfoLabel();
+    private final InfoLabel infoLabel = new InfoLabel();
 
     private BorderPane mainPane;
     private FlowPane menuPane;
@@ -52,27 +37,20 @@ public class MainAPP extends Application {
     private FlowPane footerPane;
     private Button copyButton;
     private TextArea textArea;
+    //=======================ATTRIBUTES========================
 
+
+    //=======================METHODS===========================
     public void start(Stage stage) {
+        stage.setTitle(TextEnum.APPLICATION_TITLE.getText());
         mainPane = new BorderPane();
         StyleClasses.addStyle(mainPane, StyleClasses.PANE);
-        Scene scene = new Scene(mainPane, Toolkit.getDefaultToolkit().getScreenSize().width / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
+        Scene scene = new Scene(mainPane,
+                Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
+                Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2);
+        setCssStyles(scene);
         stage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_CHECK_BOXES.getText()).toExternalForm());
-        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_MAIN_PANE.getText()).toExternalForm());
-        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_MENU.getText()).toExternalForm());
-        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_TAB_PANE.getText()).toExternalForm());
-        scene.getStylesheets().add(getClass().getResource(TextEnum.CSS_TEXT_AREA.getText()).toExternalForm());
-        stage.setTitle(TextEnum.APPLICATION_TITLE.getText());
         stage.show();
-
-        if (manager.isLoadedFromFile()) {
-            manager.getImportedEpisode().getSubEpisodes().forEach((categories, episode) -> {
-                EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
-                episodeCheckBox.createCheckBox(categories, totalSelectedCounter);
-                manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(categories, mapEpisodeToEpisodeCheckBox(episodeCheckBox, episode));
-            });
-        }
 
         menuPane = new FlowPane();
         StyleClasses.addStyle(menuPane, StyleClasses.MENU);
@@ -84,6 +62,25 @@ public class MainAPP extends Application {
         setStageListeners(stage);
         resize();
     }
+    //=======================METHODS===========================
+
+
+    //=======================RETURN METHODS====================
+    //=======================RETURN METHODS====================
+
+
+    //=======================PRIVATE METHODS===================
+    private void setCssStyles(Scene scene) {
+        String[] cssStyles = new String[]{
+                Objects.requireNonNull(getClass().getResource(TextEnum.CSS_CHECK_BOXES.getText())).toExternalForm(),
+                Objects.requireNonNull(getClass().getResource(TextEnum.CSS_MAIN_PANE.getText())).toExternalForm(),
+                Objects.requireNonNull(getClass().getResource(TextEnum.CSS_MENU.getText())).toExternalForm(),
+                Objects.requireNonNull(getClass().getResource(TextEnum.CSS_TAB_PANE.getText())).toExternalForm(),
+                Objects.requireNonNull(getClass().getResource(TextEnum.CSS_TEXT_AREA.getText())).toExternalForm()
+        };
+        scene.getStylesheets().addAll(cssStyles);
+    }
+    //=======================PRIVATE METHODS===================
 
     private void setTabPane() {
         areaPane = new TabPane();
@@ -169,8 +166,8 @@ public class MainAPP extends Application {
         }
         if (!manager.checkIfEpisodeCheckBoxContainsSelectedButton()) {
             EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
-            episodeCheckBox.createCheckBox(manager.getSelectedButton().getText(), totalSelectedCounter);
-            episodeCheckBox = mapEpisodeToEpisodeCheckBox(episodeCheckBox, manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()));
+            episodeCheckBox.createCheckBox(manager.getSelectedButton().getText());
+//            episodeCheckBox = mapEpisodeToEpisodeCheckBox(manager.getImportedEpisode().getSubEpisodes().get(manager.getSelectedButton().getText()), episodeCheckBox);
             manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(manager.getSelectedButton().getText(), episodeCheckBox);
         }
         episodePane = new VBox();
@@ -206,7 +203,7 @@ public class MainAPP extends Application {
                 manager.setSelectedButton(null);
                 manager.getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().clear();
                 episodePane.getChildren().clear();
-                totalSelectedCounter.updateCounter(new long[]{0, 0});
+                infoLabel.updateCounter(new long[]{0, 0});
             }
         });
         Button exportButton = new Button(TextEnum.EXPORT_ITEMS.getText());
@@ -222,36 +219,16 @@ public class MainAPP extends Application {
         });
         footerPane.getChildren().addAll(clearButton, exportButton, copyButton);
         footerPane.getChildren().forEach(node -> StyleClasses.addStyle(node, StyleClasses.MENU_BUTTON));
-        footerPane.getChildren().add(totalSelectedCounter.getLabel());
-        totalSelectedCounter.updateCounter(manager.getSelectedCount());
-    }
-
-    private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(EpisodeCheckBox episodeCheckBox, Episode episode) {
-        episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
-            EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
-            newEpisodeCheckBox.createCheckBox(subEpisode.getSubEpisodes().isEmpty() ? subEpisodeTitle.substring(0, subEpisodeTitle.length() - 4) : subEpisodeTitle, totalSelectedCounter);
-            if (subEpisode.isSelected()) {
-                newEpisodeCheckBox.setSelected(true);
-                newEpisodeCheckBox.getCheckBox().setSelected(true);
-            }
-            newEpisodeCheckBox.setSize(subEpisode.getSize());
-            newEpisodeCheckBox.getEpisodeParents().addAll(episodeCheckBox.getEpisodeParents());
-            newEpisodeCheckBox.getEpisodeParents().add(episodeCheckBox);
-            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
-            if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
-                ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SUB_LIST.getText());
-                toggleButton.setOnAction(action -> {
-                    if (toggleButton.isSelected()) {
-                        toggleButton.setText(TextEnum.OPENED_SUB_LIST.getText());
-                    } else {
-                        toggleButton.setText(TextEnum.CLOSED_SUB_LIST.getText());
-                    }
-                    fillEpisodePane();
-                });
-                episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle).addToggleButton(toggleButton);
-                mapEpisodeToEpisodeCheckBox(episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle), episode.getSubEpisodes().get(subEpisodeTitle));
-            }
-        });
-        return episodeCheckBox;
+        footerPane.getChildren().add(infoLabel.getLabel());
+        infoLabel.updateCounter(manager.getSelectedCount());
     }
 }
+//TODO - vložit posluchače při přímém vkládání na pane
+//                toggleButton.setOnAction(action -> {
+//                    if (toggleButton.isSelected()) {
+//                        toggleButton.setText(TextEnum.OPENED_SYMBOL_FOR_TOGGLE_BUTTON.getText());
+//                    } else {
+//                        toggleButton.setText(TextEnum.CLOSED_SYMBOL_FOR_TOGGLE_BUTTON.getText());
+//                    }
+//                    fillEpisodePane();
+//                });

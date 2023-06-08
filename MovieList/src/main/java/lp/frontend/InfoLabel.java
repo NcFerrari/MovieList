@@ -13,7 +13,7 @@ public class InfoLabel {
 
     //=======================METHODS===========================
     public void updateCounter(long[] counterAndSize) {
-        String inflectionText = "";
+        String inflectionText;
         switch ((int) counterAndSize[0]) {
             case 1:
                 inflectionText = TextEnum.TOTAL_SELECTED_TEXT_SUFFIX_FOR_ONE.getText();
@@ -26,7 +26,11 @@ public class InfoLabel {
             default:
                 inflectionText = TextEnum.TOTAL_SELECTED_TEXT_SUFFIX_DEFAULT.getText();
         }
-        label.setText(String.format("%s %s %s (%s)", TextEnum.TOTAL_SELECTED_TEXT_PREFIX.getText(), counterAndSize[0], inflectionText, unitConversion(counterAndSize[1])));
+        label.setText(String.format("%s %s %s (%s)",
+                TextEnum.TOTAL_SELECTED_TEXT_PREFIX.getText(),
+                counterAndSize[0],
+                inflectionText,
+                unitConversion(counterAndSize[1])));
     }
     //=======================METHODS===========================
 
@@ -43,7 +47,7 @@ public class InfoLabel {
             numberOfDividing++;
             result = result / 1024;
         }
-        String unit = "";
+        String unit;
         switch (numberOfDividing) {
             case 1:
                 unit = "KB";

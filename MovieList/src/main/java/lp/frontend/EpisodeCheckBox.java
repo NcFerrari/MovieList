@@ -23,14 +23,14 @@ public class EpisodeCheckBox {
     private int[] countOfEpisodes = new int[]{0};
 
     private CheckBox checkBox;
-    private boolean selected;
-    private double scrollPanePosition;
     private long size;
+    private double scrollPanePosition;
+    private InfoLabel infoLabel;
     //=======================ATTRIBUTES========================
 
 
     //=======================METHODS===========================
-    public void createCheckBox(String title, InfoLabel totalSelectedCounter) {
+    public void createCheckBox(String title) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));
@@ -38,16 +38,16 @@ public class EpisodeCheckBox {
         checkBox.setOnAction(evt -> {
             if (checkBox.getGraphic() == null ||
                     (checkBox.getGraphic() != null && !checkBox.getGraphic().isFocused())) {
-                setSelected(checkBox.isSelected());
-                selectOrDeselect(selected, episodeCheckBoxes);
+                selectOrDeselect(checkBox.isSelected(), episodeCheckBoxes);
                 setParentSelection();
-                totalSelectedCounter.updateCounter(Manager.getInstance().getSelectedCount());
+                infoLabel.updateCounter(Manager.getInstance().getSelectedCount());
             }
         });
         StyleClasses.addStyle(checkBox, StyleClasses.CHECKBOX);
     }
 
-    public void addToggleButton(ToggleButton toggleButton) {
+    public void addToggleButton() {
+        ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SYMBOL_FOR_TOGGLE_BUTTON.getText());
         checkBox.setGraphic(toggleButton);
     }
     //=======================METHODS===========================
@@ -62,17 +62,17 @@ public class EpisodeCheckBox {
         for (int i = episodeParents.size() - 1; i > 0; i--) {
             countOfEpisodes[0] = 0;
             for (EpisodeCheckBox episodeCheckBox : episodeParents.get(i).getEpisodeCheckBoxes().values()) {
-                if (episodeCheckBox.isSelected()) {
+                if (episodeCheckBox.getCheckBox().isSelected()) {
                     countOfEpisodes[0] = countOfEpisodes[0] + 1;
                 } else {
                     break;
                 }
             }
             if (countOfEpisodes[0] == episodeParents.get(i).getEpisodeCheckBoxes().size()) {
-                episodeParents.get(i).setSelected(true);
+                episodeParents.get(i).getCheckBox().setSelected(true);
                 episodeParents.get(i).getCheckBox().setSelected(true);
             } else {
-                episodeParents.get(i).setSelected(false);
+                episodeParents.get(i).getCheckBox().setSelected(false);
                 episodeParents.get(i).getCheckBox().setSelected(false);
             }
         }
@@ -81,7 +81,7 @@ public class EpisodeCheckBox {
     private void selectOrDeselect(boolean selected, Map<String, EpisodeCheckBox> episodeCheckBoxes) {
         episodeCheckBoxes.values().forEach(episodeCheckBoxList -> {
             episodeCheckBoxList.getCheckBox().setSelected(selected);
-            episodeCheckBoxList.setSelected(selected);
+            episodeCheckBoxList.getCheckBox().setSelected(selected);
             if (!episodeCheckBoxList.getEpisodeCheckBoxes().isEmpty()) {
                 selectOrDeselect(selected, episodeCheckBoxList.getEpisodeCheckBoxes());
             }

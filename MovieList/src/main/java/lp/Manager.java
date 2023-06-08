@@ -11,6 +11,9 @@ import lp.service.FileService;
 import lp.serviceimpl.DialogServiceImpl;
 import lp.serviceimpl.FileServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class Manager {
 
@@ -41,7 +44,6 @@ public class Manager {
     private String noteText = "";
     private long countOfSelected;
     private long totalSize;
-    private boolean loadedFromFile;
     //=======================ATTRIBUTES========================
 
 
@@ -74,7 +76,7 @@ public class Manager {
                 return;
             }
             Episode rootEpisode = new Episode(importedEpisode.getTitle());
-            Episode episode = mappingCurrentItemMapIntoEpisodeDTO(rootEpisode, preparedEpisodeCheckBoxToExport);
+            Episode episode = mapEpisodeCheckBoxToEpisode(preparedEpisodeCheckBoxToExport, rootEpisode);
             fileService.writeDataToJSON(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), episode);
             fileService.addToFile(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), getNoteText());
             String message = TextEnum.SUCCESS_EXPORT_PREFIX.getText() +
@@ -91,6 +93,15 @@ public class Manager {
         if (path != null) {
             fileService.copyFilesTo(path, getImportedEpisode());
         }
+    }
+
+    public void loadData() {
+        getImportedEpisode().getSubEpisodes().forEach((categories, episode) -> {
+            EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
+            episodeCheckBox.createCheckBox(categories);
+            getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(categories,
+                    mapEpisodeToEpisodeCheckBox(episode, episodeCheckBox));
+        });
     }
     //=======================METHODS===========================
 
@@ -110,15 +121,44 @@ public class Manager {
 
 
     //=======================PRIVATE METHODS===================
-    private Episode mappingCurrentItemMapIntoEpisodeDTO(Episode inputEpisode, EpisodeCheckBox episodeCheckBox) {
+    private Episode mapEpisodeCheckBoxToEpisode(EpisodeCheckBox episodeCheckBox, Episode inputEpisode) {
         episodeCheckBox.getEpisodeCheckBoxes().forEach((checkBoxTitle, subEpisodeCheckBox) -> {
             Episode episode = new Episode(checkBoxTitle);
-            episode.setSelected(subEpisodeCheckBox.isSelected());
+            episode.setSelected(subEpisodeCheckBox.getCheckBox().isSelected());
             episode.setSize(subEpisodeCheckBox.getSize());
-            Episode subEpisode = mappingCurrentItemMapIntoEpisodeDTO(episode, subEpisodeCheckBox);
+            Episode subEpisode = mapEpisodeCheckBoxToEpisode(subEpisodeCheckBox, episode);
             inputEpisode.getSubEpisodes().put(checkBoxTitle, subEpisode);
         });
         return inputEpisode;
+    }
+
+    private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(Episode episode, EpisodeCheckBox episodeCheckBox) {
+        episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
+            EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
+            newEpisodeCheckBox.createCheckBox(getCheckBoxName(subEpisode, subEpisodeTitle));
+            newEpisodeCheckBox.getCheckBox().setSelected(subEpisode.isSelected());
+            newEpisodeCheckBox.setSize(subEpisode.getSize());
+            newEpisodeCheckBox.getEpisodeParents().addAll(getAllParents(episodeCheckBox));
+            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
+            if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
+                episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle).addToggleButton();
+                mapEpisodeToEpisodeCheckBox(subEpisode, newEpisodeCheckBox);
+            }
+        });
+        return episodeCheckBox;
+    }
+
+    private List<EpisodeCheckBox> getAllParents(EpisodeCheckBox episodeCheckBox) {
+        List<EpisodeCheckBox> resultList = new ArrayList<>(episodeCheckBox.getEpisodeParents());
+        resultList.add(episodeCheckBox);
+        return resultList;
+    }
+
+    private String getCheckBoxName(Episode subEpisode, String subEpisodeTitle) {
+        if (subEpisode.getSubEpisodes().isEmpty()) {
+            subEpisodeTitle = subEpisodeTitle.substring(0, subEpisodeTitle.length() - 4);
+        }
+        return subEpisodeTitle;
     }
 
     private void count(EpisodeCheckBox episodeCheckBox) {

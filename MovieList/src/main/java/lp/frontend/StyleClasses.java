@@ -12,7 +12,7 @@ public enum StyleClasses {
     SELECTED("selected"),
     CHECKBOX("checkbox");
 
-    private String className;
+    private final String className;
 
     StyleClasses(String className) {
         this.className = className;
