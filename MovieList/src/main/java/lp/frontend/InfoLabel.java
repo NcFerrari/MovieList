@@ -54,19 +54,19 @@ public class InfoLabel {
         String unit;
         switch (numberOfDividing) {
             case 1:
-                unit = "KB";
+                unit = TextEnum.KILO_BYTE.getText();
                 break;
             case 2:
-                unit = "MB";
+                unit = TextEnum.MEGA_BYTE.getText();
                 break;
             case 3:
-                unit = "GB";
+                unit = TextEnum.GIGA_BYTE.getText();
                 break;
             case 4:
-                unit = "TB";
+                unit = TextEnum.TERA_BYTE.getText();
                 break;
             default:
-                unit = "B";
+                unit = TextEnum.BYTE.getText();
         }
         return String.format("%.2f %s", result, unit);
     }

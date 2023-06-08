@@ -8,8 +8,7 @@ public enum TextEnum {
     IMPORT_FILE("IMPORT.json"),
     EXPORT_FILE("EXPORTED"),
     EXPORT_FILE_SUFFIX(".json"),
-//    DEFAULT_ROOT_PATH("C://Users/lpesek/Music"),
-    DEFAULT_ROOT_PATH("C://Users/lpesek/Desktop/test"),
+    DEFAULT_ROOT_PATH("C://Users/lpesek/Music"),
     DIRECTORY_FOR_COPY_FILES("C://Users/lpesek/Desktop/exported"),
     FILE_PATH_TITLE("Zadejte soubor"),
     FILE_PATH_MESSAGE("Zadejte cestu, k adresáři, od kterého se mají načíst rekurzivně soubory"),
@@ -57,7 +56,12 @@ public enum TextEnum {
     SEPARATOR("/"),
     EXCLUDED_FILES_FILE_NAME("excluded_files.exc"),
     DIR_NOT_CREATED("Directory not created"),
-    DIRS_NOT_CREATED("Directories not created");
+    DIRS_NOT_CREATED("Directories not created"),
+    BYTE("B"),
+    KILO_BYTE("KB"),
+    MEGA_BYTE("MB"),
+    GIGA_BYTE("GB"),
+    TERA_BYTE("TB");
 
     private final String text;
 
