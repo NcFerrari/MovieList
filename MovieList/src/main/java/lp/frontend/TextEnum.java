@@ -17,7 +17,7 @@ public enum TextEnum {
     ADDITIONAL_TEXT_FILE_NOT_FOUND("\n\nADRESÁŘ NEEXISTUJE!"),
     APPLICATION_TITLE("Seznam filmů"),
     CSS_CHECK_BOXES("/css/fx-check-boxes.css"),
-    CSS_MAIN_PANE("/css/fx-main-pane.css"),
+    CSS_PANE("/css/fx-pane.css"),
     CSS_MENU("/css/fx-menu.css"),
     CSS_TAB_PANE("/css/fx-tab-pane.css"),
     CSS_TEXT_AREA("/css/fx-text-area.css"),

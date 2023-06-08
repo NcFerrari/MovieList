@@ -25,12 +25,12 @@ public class EpisodeCheckBox {
     private CheckBox checkBox;
     private long size;
     private double scrollPanePosition;
-    private InfoLabel infoLabel;
+    private ToggleButton toggleButton;
     //=======================ATTRIBUTES========================
 
 
     //=======================METHODS===========================
-    public void createCheckBox(String title) {
+    public void createCheckBox(String title, InfoLabel infoLabel) {
         checkBox = new CheckBox(title);
         Tooltip checkBoxTooltip = new Tooltip(title);
         checkBoxTooltip.setFont(new Font("Arial", 16));
@@ -47,7 +47,7 @@ public class EpisodeCheckBox {
     }
 
     public void addToggleButton() {
-        ToggleButton toggleButton = new ToggleButton(TextEnum.CLOSED_SYMBOL_FOR_TOGGLE_BUTTON.getText());
+        toggleButton = new ToggleButton(TextEnum.CLOSED_SYMBOL_FOR_TOGGLE_BUTTON.getText());
         checkBox.setGraphic(toggleButton);
     }
     //=======================METHODS===========================

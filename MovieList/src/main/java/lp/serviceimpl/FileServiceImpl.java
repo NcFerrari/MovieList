@@ -87,7 +87,9 @@ public class FileServiceImpl implements FileService {
             bufferedWriter.newLine();
             bufferedWriter.write(TextEnum.NOTE_SEPARATOR.getText());
             bufferedWriter.newLine();
-            bufferedWriter.write(text);
+            if (text != null) {
+                bufferedWriter.write(text);
+            }
         } catch (IOException exp) {
             dialogService.useErrorDialog(exp);
         }

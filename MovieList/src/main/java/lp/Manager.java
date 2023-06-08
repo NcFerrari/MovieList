@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import lombok.Data;
 import lp.business.dto.Episode;
 import lp.frontend.EpisodeCheckBox;
+import lp.frontend.InfoLabel;
 import lp.frontend.MainAPP;
 import lp.frontend.TextEnum;
 import lp.service.DialogService;
@@ -37,11 +38,12 @@ public class Manager {
     //=======================ATTRIBUTES========================
     private final FileService fileService = FileServiceImpl.getInstance();
     private final DialogService dialogService = DialogServiceImpl.getInstance();
-    private final EpisodeCheckBox preparedEpisodeCheckBoxToExport = new EpisodeCheckBox();
+    private final EpisodeCheckBox episodeCheckBoxToExport = new EpisodeCheckBox();
+    private final InfoLabel infoLabel = new InfoLabel();
 
     private Episode importedEpisode;
     private Button selectedButton;
-    private String noteText = "";
+    private String noteText;
     private long countOfSelected;
     private long totalSize;
     //=======================ATTRIBUTES========================
@@ -60,7 +62,7 @@ public class Manager {
     }
 
     public void setScrollPanePosition(double value) {
-        getPreparedEpisodeCheckBoxToExport()
+        getEpisodeCheckBoxToExport()
                 .getEpisodeCheckBoxes()
                 .get(getSelectedButton().getText())
                 .setScrollPanePosition(value);
@@ -76,7 +78,7 @@ public class Manager {
                 return;
             }
             Episode rootEpisode = new Episode(importedEpisode.getTitle());
-            Episode episode = mapEpisodeCheckBoxToEpisode(preparedEpisodeCheckBoxToExport, rootEpisode);
+            Episode episode = mapEpisodeCheckBoxToEpisode(episodeCheckBoxToExport, rootEpisode);
             fileService.writeDataToJSON(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), episode);
             fileService.addToFile(fileName + TextEnum.EXPORT_FILE_SUFFIX.getText(), getNoteText());
             String message = TextEnum.SUCCESS_EXPORT_PREFIX.getText() +
@@ -98,8 +100,8 @@ public class Manager {
     public void loadData() {
         getImportedEpisode().getSubEpisodes().forEach((categories, episode) -> {
             EpisodeCheckBox episodeCheckBox = new EpisodeCheckBox();
-            episodeCheckBox.createCheckBox(categories);
-            getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(categories,
+            episodeCheckBox.createCheckBox(categories, getInfoLabel());
+            getEpisodeCheckBoxToExport().getEpisodeCheckBoxes().put(categories,
                     mapEpisodeToEpisodeCheckBox(episode, episodeCheckBox));
         });
     }
@@ -108,14 +110,40 @@ public class Manager {
 
     //=======================RETURN METHODS====================
     public boolean checkIfEpisodeCheckBoxContainsSelectedButton() {
-        return getPreparedEpisodeCheckBoxToExport().getEpisodeCheckBoxes().containsKey(getSelectedButton().getText());
+        return getEpisodeCheckBoxToExport().getEpisodeCheckBoxes().containsKey(getSelectedButton().getText());
     }
 
     public long[] getSelectedCount() {
         countOfSelected = 0;
         totalSize = 0;
-        count(getPreparedEpisodeCheckBoxToExport());
+        count(getEpisodeCheckBoxToExport());
         return new long[]{countOfSelected, totalSize};
+    }
+
+    public EpisodeCheckBox mapEpisodeToEpisodeCheckBox(Episode episode, EpisodeCheckBox episodeCheckBox) {
+        episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
+            EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
+            newEpisodeCheckBox.createCheckBox(getCheckBoxName(subEpisode, subEpisodeTitle), manager.getInfoLabel());
+            newEpisodeCheckBox.getCheckBox().setSelected(subEpisode.isSelected());
+            newEpisodeCheckBox.setSize(subEpisode.getSize());
+            newEpisodeCheckBox.getEpisodeParents().addAll(getAllParents(episodeCheckBox));
+            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
+            if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
+                episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle).addToggleButton();
+                mapEpisodeToEpisodeCheckBox(subEpisode, newEpisodeCheckBox);
+            }
+        });
+        return episodeCheckBox;
+    }
+
+    public EpisodeCheckBox getSelectedEpisodeCheckBox() {
+        return getEpisodeCheckBoxToExport().getEpisodeCheckBoxes().get(manager.getSelectedButton().getText());
+    }
+
+    public void resetData() {
+        getEpisodeCheckBoxToExport().getEpisodeCheckBoxes().clear();
+        loadData();
+        getInfoLabel().updateCounter(getSelectedCount());
     }
     //=======================RETURN METHODS====================
 
@@ -130,22 +158,6 @@ public class Manager {
             inputEpisode.getSubEpisodes().put(checkBoxTitle, subEpisode);
         });
         return inputEpisode;
-    }
-
-    private EpisodeCheckBox mapEpisodeToEpisodeCheckBox(Episode episode, EpisodeCheckBox episodeCheckBox) {
-        episode.getSubEpisodes().forEach((subEpisodeTitle, subEpisode) -> {
-            EpisodeCheckBox newEpisodeCheckBox = new EpisodeCheckBox();
-            newEpisodeCheckBox.createCheckBox(getCheckBoxName(subEpisode, subEpisodeTitle));
-            newEpisodeCheckBox.getCheckBox().setSelected(subEpisode.isSelected());
-            newEpisodeCheckBox.setSize(subEpisode.getSize());
-            newEpisodeCheckBox.getEpisodeParents().addAll(getAllParents(episodeCheckBox));
-            episodeCheckBox.getEpisodeCheckBoxes().put(subEpisodeTitle, newEpisodeCheckBox);
-            if (!episode.getSubEpisodes().get(subEpisodeTitle).getSubEpisodes().isEmpty()) {
-                episodeCheckBox.getEpisodeCheckBoxes().get(subEpisodeTitle).addToggleButton();
-                mapEpisodeToEpisodeCheckBox(subEpisode, newEpisodeCheckBox);
-            }
-        });
-        return episodeCheckBox;
     }
 
     private List<EpisodeCheckBox> getAllParents(EpisodeCheckBox episodeCheckBox) {

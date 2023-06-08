@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum StyleClasses {
 
     PANE("pane"),
+    EPISODE_PANE("episode-pane"),
     MENU("menu"),
     MENU_BUTTON("menu-button"),
     SELECTED("selected"),

@@ -1,13 +1,11 @@
 package lp.frontend;
 
 import javafx.scene.control.Label;
-import lombok.Getter;
 
-@Getter
 public class InfoLabel {
 
     //=======================ATTRIBUTES========================
-    private final Label label = new Label();
+    private Label label;
     //=======================ATTRIBUTES========================
 
 
@@ -36,6 +34,12 @@ public class InfoLabel {
 
 
     //=======================RETURN METHODS====================
+    public Label getLabel() {
+        if (label == null) {
+            label = new Label();
+        }
+        return label;
+    }
     //=======================RETURN METHODS====================
 
 
